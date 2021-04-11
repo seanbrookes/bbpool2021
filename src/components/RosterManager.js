@@ -1,0 +1,269 @@
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+
+const RosterTitle = styled.h2`
+  font-size: 24px;
+  color: #bc0707;
+  background-color: #eeeeee;
+`;
+
+const RosterManagerContainer = styled.div`
+  border: 1px solid #eeeeee;
+  border-radius: 2rem;
+  padding: 1rem;
+`;
+
+const PlayerGroupTable = styled.table`
+
+  margin: 0 2rem 0 2rem;
+
+  td {
+    border-bottom: 1px solid #dddddd;
+    font-size: 12px;
+  }
+
+`;
+
+
+export const RosterManager = ({roster = {}, saveRosters}) => {
+  const [targetNewPlayer, setTargetNewPlayer] = useState(null);
+
+  const hitters = roster.players.filter((player) => {
+    return player.posType === 'hitter';
+  });
+  const starters = roster.players.filter((player) => {
+    return player.pos.toLowerCase() === 'sp';
+  });
+  const closers = roster.players.filter((player) => {
+    return player.pos.toLowerCase() === 'rp';
+  });
+
+
+  const onTriggerDeletePlayer = (event, targetPlayer) => {
+   if (window.confirm(`delete ${targetPlayer.name}?`)) {
+      console.log(`| delete this player ${targetPlayer.name}`);
+      const updatedRoster = {...roster};
+      updatedRoster.players = roster.players.filter((rosterPlayer) => {
+        return rosterPlayer.name !== targetPlayer.name;
+      });
+
+      saveRosters(updatedRoster);
+
+      
+
+   }
+  };
+
+  const onCreatePlayer = () => {
+    const targetPlayer = {...targetNewPlayer};
+    const updatedRoster = {...roster};
+    // draftStatus: "protected"
+    // index: 27
+    // mlbid: "592518"
+    // name: "Manny Machado"
+    // pos: "3B"
+    // posType: "hitter"
+    // roster: "bashers"
+    // status: "protected"
+    // team: "BAL"
+
+    targetPlayer.posType = 'hitter';
+    if (targetPlayer.pos === 'SP' || targetPlayer.pos === 'RP') {
+      targetPlayer.posType = 'pitcher';
+    }
+    targetPlayer.status = 'protected';
+    targetPlayer.roster = roster.slug;
+
+
+    updatedRoster.players.push(targetPlayer);
+
+    saveRosters(updatedRoster);
+    setTargetNewPlayer(null);
+  };
+
+  const onUpdateNewPlayerProperty = (event, property) => {
+    const targetPlayer = {...targetNewPlayer};
+    targetPlayer[property] = event.target.value;
+
+    setTargetNewPlayer(targetPlayer);
+  }
+
+  return (
+    <RosterManagerContainer>
+      <RosterTitle>{roster.slug}</RosterTitle>
+      <PlayerGroupTable>
+        <caption>hitters</caption>
+        {hitters.map((player) => {
+          return (
+            <tr>
+              <td>
+                <button onClick={(event) => {return onTriggerDeletePlayer(event, player)}}>X</button>
+              </td>
+              <td>
+                {player.mlbid}
+              </td>
+              <td>
+                {player.name}
+              </td>
+              <td>
+                {player.posType}
+              </td>
+              <td>
+                {player.pos}
+              </td>
+              <td>
+                {player.team}
+              </td>
+            </tr>
+          )
+        })}
+      </PlayerGroupTable>
+      <PlayerGroupTable>
+        <caption>starters</caption>
+        {starters.map((player) => {
+          return (
+            <tr>
+              <td>
+                <button onClick={(event) => {return onTriggerDeletePlayer(event, player)}}>X</button>
+              </td>
+              <td>
+                {player.mlbid}
+              </td>
+              <td>
+                {player.name}
+              </td>
+              <td>
+                {player.posType}
+              </td>
+              <td>
+                {player.pos}
+              </td>
+              <td>
+                {player.team}
+              </td>
+            </tr>
+          )
+        })}
+      </PlayerGroupTable>
+      <PlayerGroupTable>
+        <caption>closers</caption>
+        {closers.map((player) => {
+          return (
+            <tr>
+              <td>
+                <button onClick={(event) => {return onTriggerDeletePlayer(event, player)}}>X</button>
+              </td>
+              <td>
+                {player.mlbid}
+              </td>
+              <td>
+                {player.name}
+              </td>
+              <td>
+                {player.posType}
+              </td>
+              <td>
+                {player.pos}
+              </td>
+              <td>
+                {player.team}
+              </td>
+            </tr>
+          )
+        })}
+      </PlayerGroupTable>
+      {/* Player form */}
+      <div>
+      <div>
+          <div>
+            <label>
+              Name:
+              <input
+                value={(targetNewPlayer && targetNewPlayer.name) ? targetNewPlayer.name : ''}
+                onChange={(event) => onUpdateNewPlayerProperty(event, 'name')}
+              />
+            </label>
+          </div>
+          <div>
+            <label>
+              Pos:
+              <select
+                onChange={(event) => onUpdateNewPlayerProperty(event, 'pos')}
+                className="select-pos pick-property-edit"
+                value={(targetNewPlayer && targetNewPlayer.pos) ? targetNewPlayer.pos : ''}
+                data-property="pos"
+              >
+                <option value>-</option>
+                <option value="C">C</option>
+                <option value="1B">1B</option>
+                <option value="2B">2B</option>
+                <option value="3B">3B</option>
+                <option value="SS">SS</option>
+                <option value="LF">LF</option>
+                <option value="CF">CF</option>
+                <option value="RF">RF</option>
+                <option value="DH">DH</option>
+                <option value="SP">SP</option>
+                <option value="RP">RP</option>
+              </select>
+            </label>
+          </div>
+          <div>
+            <label>
+              Team:
+              <select
+                className="select-team pick-property-edit"
+                onChange={(event) => onUpdateNewPlayerProperty(event, 'team')}
+                value={(targetNewPlayer && targetNewPlayer.team) ? targetNewPlayer.team : ''}
+                data-property="team"
+              >
+                <option value>--</option>
+                <option value="BAL">BAL</option>
+                <option value="BOS">BOS</option>
+                <option value="CHA">CHA</option>
+                <option value="CLE">CLE</option>
+                <option value="DET">DET</option>
+                <option value="HOU">HOU</option>
+                <option value="KC">KC</option>
+                <option value="LAA">LAA</option>
+                <option value="MIN">MIN</option>
+                <option value="NYY">NYY</option>
+                <option value="OAK">OAK</option>
+                <option value="SEA">SEA</option>
+                <option value="TB">TB</option>
+                <option value="TEX">TEX</option>
+                <option value="TOR">TOR</option>
+              </select>
+            </label>
+          </div>
+          {/* <div>
+            <label>
+              Status:
+              <select
+                value={this.state.newPlayer.status}
+                onChange={this.updateNewPlayerProperty}
+                data-property="draftStatus"
+              >
+                <option value="drafted">drafted</option>
+                <option value="bubble">bubble</option>
+                <option value="prospect">prospect</option>
+                <option value="protected">protected</option>
+                <option value="roster">roster</option>
+                <option value="regular">regular</option>
+                <option value="unprotected">unprotected</option>
+              </select>
+            </label>
+          </div> */}
+          <div className="layout">
+            <button
+              onClick={onCreatePlayer}
+            >
+              save
+            </button>
+          </div>
+        </div>
+      </div>
+    </RosterManagerContainer>
+  );
+
+};

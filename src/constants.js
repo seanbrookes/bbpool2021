@@ -1,0 +1,3 @@
+export const CONSTANTS = {
+  ROSTER_DATA_NAME: 'ROSTER_DATA'
+};
