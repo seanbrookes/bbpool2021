@@ -11,6 +11,7 @@ const Flex = styled.div`
 
 function HomePage() {
   const [rosterData, setRosterData] = useState({});
+  const [isHiddenOn, setIsHiddenOn] = useState(false);
 
 
   useEffect(() => {
@@ -24,6 +25,10 @@ function HomePage() {
     setRosterData(rosterBlob);
   }, []);
 
+  const onHiddenControlClick = (event) => {
+
+  }
+
   const onSaveRosters = (targetRoster) => {
     const clonedRosterData = {...rosterData};
     if (targetRoster.slug) {
@@ -35,13 +40,15 @@ function HomePage() {
   }
 
   // let rosters2016 = [];
-  return (<div><div>Welcome to Baseball Pool 2021</div>
+  return (<div>
+      <input style={{position: 'absolute', top: 0, right: 0}} type="checkbox" onChange={onHiddenControlClick} />
+      <div>Welcome to Baseball Pool 2021</div>
       <Flex>
         {
           rosterData && Object.keys(rosterData).map((rosterKey) => {
             const abc = rosterData[rosterKey];
             return (
-              <RosterManager roster={abc} saveRosters={onSaveRosters} />     
+              <RosterManager roster={abc} saveRosters={onSaveRosters} isHiddenOn={isHiddenOn} />     
             );
           })
         }
