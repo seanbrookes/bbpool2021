@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { RosterManager } from '../components/RosterManager';
-import { rosters2016 } from '../data/rosters-2016';
+import { rosters2021 } from '../data/rosters-2021';
 import { CONSTANTS } from '../constants';
 
 import styled from 'styled-components';
@@ -16,15 +16,8 @@ function HomePage() {
   useEffect(() => {
 
     if (!window.localStorage.getItem(CONSTANTS.ROSTER_DATA_NAME)) {
-      const adjustedRosterData = {};
-      rosters2016.map((roster) => {
-        adjustedRosterData[roster.slug] = roster;
-      });
-
-
-      window.localStorage.setItem(CONSTANTS.ROSTER_DATA_NAME, JSON.stringify(adjustedRosterData));
+      window.localStorage.setItem(CONSTANTS.ROSTER_DATA_NAME, JSON.stringify(rosters2021));
     }
-
 
     let rosterBlob = JSON.parse(window.localStorage.getItem(CONSTANTS.ROSTER_DATA_NAME));
     console.log(JSON.stringify(rosterBlob));
