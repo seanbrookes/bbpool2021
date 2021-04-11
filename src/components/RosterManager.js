@@ -25,7 +25,7 @@ const PlayerGroupTable = styled.table`
 `;
 
 
-export const RosterManager = ({roster = {}, saveRosters}) => {
+export const RosterManager = ({roster = {}, saveRosters, isHiddenOn}) => {
   const [targetNewPlayer, setTargetNewPlayer] = useState(null);
 
   const hitters = roster.players.filter((player) => {
@@ -86,7 +86,29 @@ export const RosterManager = ({roster = {}, saveRosters}) => {
     targetPlayer[property] = event.target.value;
 
     setTargetNewPlayer(targetPlayer);
-  }
+  };
+
+  const onUpdatePlayerTeam = (event, player) => {
+    const updatedRoster = {...roster};
+    updatedRoster.players.map((rosterPlayer) => {
+      if (rosterPlayer.name === player.name) {
+        rosterPlayer.team = event.target.value;
+      }
+    });
+
+    saveRosters(updatedRoster);
+  };
+
+  const onUpdatePlayerPos = (event, player) => {
+    const updatedRoster = {...roster};
+    updatedRoster.players.map((rosterPlayer) => {
+      if (rosterPlayer.name === player.name) {
+        rosterPlayer.pos = event.target.value;
+      }
+    });
+
+    saveRosters(updatedRoster);
+  };
 
   return (
     <RosterManagerContainer>
@@ -97,22 +119,59 @@ export const RosterManager = ({roster = {}, saveRosters}) => {
           return (
             <tr>
               <td>
-                <button onClick={(event) => {return onTriggerDeletePlayer(event, player)}}>X</button>
+                {isHiddenOn && <button onClick={(event) => {return onTriggerDeletePlayer(event, player)}}>X</button>}
               </td>
               <td>
-                {player.mlbid}
+                {isHiddenOn && player.mlbid}
               </td>
               <td>
                 {player.name}
               </td>
               <td>
-                {player.posType}
+                <select
+                  onChange={(event) => onUpdatePlayerPos(event, player)}
+                  className="select-pos pick-property-edit"
+                  value={player.pos}
+                  data-property="pos"
+                >
+                  <option value>-</option>
+                  <option value="C">C</option>
+                  <option value="1B">1B</option>
+                  <option value="2B">2B</option>
+                  <option value="3B">3B</option>
+                  <option value="SS">SS</option>
+                  <option value="LF">LF</option>
+                  <option value="CF">CF</option>
+                  <option value="RF">RF</option>
+                  <option value="DH">DH</option>
+                  <option value="SP">SP</option>
+                  <option value="RP">RP</option>
+                </select>
               </td>
               <td>
-                {player.pos}
-              </td>
-              <td>
-                {player.team}
+                <select
+                  className="select-team pick-property-edit"
+                  onChange={(event) => onUpdatePlayerTeam(event, player)}
+                  value={player.team}
+                  data-property="team"
+                >
+                  <option value>--</option>
+                  <option value="BAL">BAL</option>
+                  <option value="BOS">BOS</option>
+                  <option value="CHA">CHA</option>
+                  <option value="CLE">CLE</option>
+                  <option value="DET">DET</option>
+                  <option value="HOU">HOU</option>
+                  <option value="KC">KC</option>
+                  <option value="LAA">LAA</option>
+                  <option value="MIN">MIN</option>
+                  <option value="NYY">NYY</option>
+                  <option value="OAK">OAK</option>
+                  <option value="SEA">SEA</option>
+                  <option value="TB">TB</option>
+                  <option value="TEX">TEX</option>
+                  <option value="TOR">TOR</option>
+                </select>
               </td>
             </tr>
           )
@@ -124,22 +183,59 @@ export const RosterManager = ({roster = {}, saveRosters}) => {
           return (
             <tr>
               <td>
-                <button onClick={(event) => {return onTriggerDeletePlayer(event, player)}}>X</button>
+                {isHiddenOn && <button onClick={(event) => {return onTriggerDeletePlayer(event, player)}}>X</button>}
               </td>
               <td>
-                {player.mlbid}
+                {isHiddenOn && player.mlbid}
               </td>
               <td>
                 {player.name}
               </td>
               <td>
-                {player.posType}
+                <select
+                  onChange={(event) => onUpdatePlayerPos(event, player)}
+                  className="select-pos pick-property-edit"
+                  value={player.pos}
+                  data-property="pos"
+                >
+                  <option value>-</option>
+                  <option value="C">C</option>
+                  <option value="1B">1B</option>
+                  <option value="2B">2B</option>
+                  <option value="3B">3B</option>
+                  <option value="SS">SS</option>
+                  <option value="LF">LF</option>
+                  <option value="CF">CF</option>
+                  <option value="RF">RF</option>
+                  <option value="DH">DH</option>
+                  <option value="SP">SP</option>
+                  <option value="RP">RP</option>
+                </select>
               </td>
               <td>
-                {player.pos}
-              </td>
-              <td>
-                {player.team}
+                <select
+                  className="select-team pick-property-edit"
+                  onChange={(event) => onUpdatePlayerTeam(event, player)}
+                  value={player.team}
+                  data-property="team"
+                >
+                  <option value>--</option>
+                  <option value="BAL">BAL</option>
+                  <option value="BOS">BOS</option>
+                  <option value="CHA">CHA</option>
+                  <option value="CLE">CLE</option>
+                  <option value="DET">DET</option>
+                  <option value="HOU">HOU</option>
+                  <option value="KC">KC</option>
+                  <option value="LAA">LAA</option>
+                  <option value="MIN">MIN</option>
+                  <option value="NYY">NYY</option>
+                  <option value="OAK">OAK</option>
+                  <option value="SEA">SEA</option>
+                  <option value="TB">TB</option>
+                  <option value="TEX">TEX</option>
+                  <option value="TOR">TOR</option>
+                </select>
               </td>
             </tr>
           )
@@ -151,22 +247,59 @@ export const RosterManager = ({roster = {}, saveRosters}) => {
           return (
             <tr>
               <td>
-                <button onClick={(event) => {return onTriggerDeletePlayer(event, player)}}>X</button>
+              {isHiddenOn && <button onClick={(event) => {return onTriggerDeletePlayer(event, player)}}>X</button>}
               </td>
               <td>
-                {player.mlbid}
+                {isHiddenOn && player.mlbid}
               </td>
               <td>
                 {player.name}
               </td>
               <td>
-                {player.posType}
+                <select
+                  onChange={(event) => onUpdatePlayerPos(event, player)}
+                  className="select-pos pick-property-edit"
+                  value={player.pos}
+                  data-property="pos"
+                >
+                  <option value>-</option>
+                  <option value="C">C</option>
+                  <option value="1B">1B</option>
+                  <option value="2B">2B</option>
+                  <option value="3B">3B</option>
+                  <option value="SS">SS</option>
+                  <option value="LF">LF</option>
+                  <option value="CF">CF</option>
+                  <option value="RF">RF</option>
+                  <option value="DH">DH</option>
+                  <option value="SP">SP</option>
+                  <option value="RP">RP</option>
+                </select>
               </td>
               <td>
-                {player.pos}
-              </td>
-              <td>
-                {player.team}
+                <select
+                  className="select-team pick-property-edit"
+                  onChange={(event) => onUpdatePlayerTeam(event, player)}
+                  value={player.team}
+                  data-property="team"
+                >
+                  <option value>--</option>
+                  <option value="BAL">BAL</option>
+                  <option value="BOS">BOS</option>
+                  <option value="CHA">CHA</option>
+                  <option value="CLE">CLE</option>
+                  <option value="DET">DET</option>
+                  <option value="HOU">HOU</option>
+                  <option value="KC">KC</option>
+                  <option value="LAA">LAA</option>
+                  <option value="MIN">MIN</option>
+                  <option value="NYY">NYY</option>
+                  <option value="OAK">OAK</option>
+                  <option value="SEA">SEA</option>
+                  <option value="TB">TB</option>
+                  <option value="TEX">TEX</option>
+                  <option value="TOR">TOR</option>
+                </select>
               </td>
             </tr>
           )
