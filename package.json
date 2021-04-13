@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/seanbrookes/bbpool2021#readme",
   "dependencies": {
+    "aws-sdk": "^2.884.0",
     "express": "^4.17.1",
     "fs": "0.0.1-security",
     "next": "^10.1.3",

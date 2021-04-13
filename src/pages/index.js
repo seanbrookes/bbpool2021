@@ -26,7 +26,7 @@ function HomePage() {
   }, []);
 
   const onHiddenControlClick = (event) => {
-
+    setIsHiddenOn(!isHiddenOn);
   }
 
   const onSaveRosters = (targetRoster) => {

@@ -128,7 +128,7 @@ export const RosterManager = ({roster = {}, saveRosters, isHiddenOn}) => {
                 {player.name}
               </td>
               <td>
-                <select
+              {isHiddenOn ? <select
                   onChange={(event) => onUpdatePlayerPos(event, player)}
                   className="select-pos pick-property-edit"
                   value={player.pos}
@@ -146,10 +146,10 @@ export const RosterManager = ({roster = {}, saveRosters, isHiddenOn}) => {
                   <option value="DH">DH</option>
                   <option value="SP">SP</option>
                   <option value="RP">RP</option>
-                </select>
+                </select> : player.pos}
               </td>
               <td>
-                <select
+              {isHiddenOn ? <select
                   className="select-team pick-property-edit"
                   onChange={(event) => onUpdatePlayerTeam(event, player)}
                   value={player.team}
@@ -171,7 +171,7 @@ export const RosterManager = ({roster = {}, saveRosters, isHiddenOn}) => {
                   <option value="TB">TB</option>
                   <option value="TEX">TEX</option>
                   <option value="TOR">TOR</option>
-                </select>
+                </select> : player.team}
               </td>
             </tr>
           )
@@ -192,7 +192,7 @@ export const RosterManager = ({roster = {}, saveRosters, isHiddenOn}) => {
                 {player.name}
               </td>
               <td>
-                <select
+              {isHiddenOn ? <select
                   onChange={(event) => onUpdatePlayerPos(event, player)}
                   className="select-pos pick-property-edit"
                   value={player.pos}
@@ -210,10 +210,10 @@ export const RosterManager = ({roster = {}, saveRosters, isHiddenOn}) => {
                   <option value="DH">DH</option>
                   <option value="SP">SP</option>
                   <option value="RP">RP</option>
-                </select>
+                </select> : player.pos}
               </td>
               <td>
-                <select
+              {isHiddenOn ? <select
                   className="select-team pick-property-edit"
                   onChange={(event) => onUpdatePlayerTeam(event, player)}
                   value={player.team}
@@ -235,7 +235,7 @@ export const RosterManager = ({roster = {}, saveRosters, isHiddenOn}) => {
                   <option value="TB">TB</option>
                   <option value="TEX">TEX</option>
                   <option value="TOR">TOR</option>
-                </select>
+                </select> : player.team}
               </td>
             </tr>
           )
@@ -256,7 +256,7 @@ export const RosterManager = ({roster = {}, saveRosters, isHiddenOn}) => {
                 {player.name}
               </td>
               <td>
-                <select
+                {isHiddenOn ? <select
                   onChange={(event) => onUpdatePlayerPos(event, player)}
                   className="select-pos pick-property-edit"
                   value={player.pos}
@@ -274,10 +274,10 @@ export const RosterManager = ({roster = {}, saveRosters, isHiddenOn}) => {
                   <option value="DH">DH</option>
                   <option value="SP">SP</option>
                   <option value="RP">RP</option>
-                </select>
+                </select> : player.pos}
               </td>
               <td>
-                <select
+                {isHiddenOn ? <select
                   className="select-team pick-property-edit"
                   onChange={(event) => onUpdatePlayerTeam(event, player)}
                   value={player.team}
@@ -299,7 +299,7 @@ export const RosterManager = ({roster = {}, saveRosters, isHiddenOn}) => {
                   <option value="TB">TB</option>
                   <option value="TEX">TEX</option>
                   <option value="TOR">TOR</option>
-                </select>
+                </select> : player.team}
               </td>
             </tr>
           )
@@ -307,7 +307,7 @@ export const RosterManager = ({roster = {}, saveRosters, isHiddenOn}) => {
       </PlayerGroupTable>
       {/* Player form */}
       <div>
-      <div>
+      {isHiddenOn && <div>
           <div>
             <label>
               Name:
@@ -394,7 +394,7 @@ export const RosterManager = ({roster = {}, saveRosters, isHiddenOn}) => {
               save
             </button>
           </div>
-        </div>
+        </div>}
       </div>
     </RosterManagerContainer>
   );
