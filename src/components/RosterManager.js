@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-const RosterTitle = styled.h2`
-  font-size: 24px;
-  color: #bc0707;
-  background-color: #eeeeee;
-`;
 
 const RosterManagerContainer = styled.div`
-  border: 1px solid #eeeeee;
-  border-radius: 2rem;
+  border-bottom: 1px solid #eeeeee;
   padding: 1rem;
+  font-family: arial sans-serif;
+  display: block;
+`;
+
+const RosterTitle = styled.h2`
+  font-size: 16px;
+  color: #a80000;
+  background-color: #eeeeee;
+  text-transform: capitalize;
+
 `;
 
 const PlayerGroupTable = styled.table`
@@ -19,7 +23,7 @@ const PlayerGroupTable = styled.table`
 
   td {
     border-bottom: 1px solid #dddddd;
-    font-size: 12px;
+    font-size: 15px;
   }
 
 `;
@@ -114,7 +118,7 @@ export const RosterManager = ({roster = {}, saveRosters, isHiddenOn}) => {
     <RosterManagerContainer>
       <RosterTitle>{roster.slug}</RosterTitle>
       <PlayerGroupTable>
-        <caption>hitters</caption>
+        <caption style={{background: '#f4f4f4', color: '#444444', textAlign:'left', textTransform: 'uppercase'}}>hitters</caption>
         {hitters.map((player) => {
           return (
             <tr>
@@ -124,7 +128,7 @@ export const RosterManager = ({roster = {}, saveRosters, isHiddenOn}) => {
               <td>
                 {isHiddenOn && player.mlbid}
               </td>
-              <td>
+              <td style={{color: 'darkblue', whiteSpace: 'nowrap'}}>
                 {player.name}
               </td>
               <td>
@@ -178,7 +182,7 @@ export const RosterManager = ({roster = {}, saveRosters, isHiddenOn}) => {
         })}
       </PlayerGroupTable>
       <PlayerGroupTable>
-        <caption>starters</caption>
+        <caption style={{background: '#f4f4f4', color: '#444444', textAlign:'left', textTransform: 'uppercase'}}>starters</caption>
         {starters.map((player) => {
           return (
             <tr>
@@ -188,7 +192,7 @@ export const RosterManager = ({roster = {}, saveRosters, isHiddenOn}) => {
               <td>
                 {isHiddenOn && player.mlbid}
               </td>
-              <td>
+              <td  style={{color: 'darkblue', whiteSpace: 'nowrap'}}>
                 {player.name}
               </td>
               <td>
@@ -242,7 +246,7 @@ export const RosterManager = ({roster = {}, saveRosters, isHiddenOn}) => {
         })}
       </PlayerGroupTable>
       <PlayerGroupTable>
-        <caption>closers</caption>
+        <caption style={{background: '#f4f4f4', color: '#444444', textAlign:'left', textTransform: 'uppercase'}}>closers</caption>
         {closers.map((player) => {
           return (
             <tr>
@@ -252,7 +256,7 @@ export const RosterManager = ({roster = {}, saveRosters, isHiddenOn}) => {
               <td>
                 {isHiddenOn && player.mlbid}
               </td>
-              <td>
+              <td style={{color: 'darkblue', whiteSpace: 'nowrap'}}>
                 {player.name}
               </td>
               <td>

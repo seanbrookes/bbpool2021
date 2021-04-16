@@ -7,7 +7,49 @@ import styled from 'styled-components';
 
 const Flex = styled.div`
   display: flex;
+  width: 100%;
+  flex-wrap: wrap;
 `;
+
+export const getPosValue = (pos) => {
+
+  switch(pos) {
+
+    case 'C':
+      return 1;
+    case '1B':
+      return 2;
+    case '2B':
+      return 3;
+    case '3B':
+      return 4;
+    case 'SS':
+      return 5;
+    case 'LF':
+      return 6;
+    case 'CF':
+      return 7;
+    case 'RF':
+      return 8;
+    case 'DH':
+      return 9;
+    case 'SP':
+      return 10;
+    case 'RP':
+      return 11;
+    default:
+      return 0;
+  }
+};
+
+export const sortRosterPlayers = (players) => {
+
+  const sort = players.sort(function(a, b) {
+    return getPosValue(a.pos) - getPosValue(b.pos);
+  });
+
+  return sort;
+};
 
 function HomePage() {
   const [rosterData, setRosterData] = useState({});
@@ -16,11 +58,13 @@ function HomePage() {
 
   useEffect(() => {
 
-    if (!window.localStorage.getItem(CONSTANTS.ROSTER_DATA_NAME)) {
-      window.localStorage.setItem(CONSTANTS.ROSTER_DATA_NAME, JSON.stringify(rosters2021));
-    }
+  //   if (!window.localStorage.getItem(CONSTANTS.ROSTER_DATA_NAME)) {
+  //     window.localStorage.setItem(CONSTANTS.ROSTER_DATA_NAME, JSON.stringify(rosters2021));
+  //   }
+  //  let rosterBlob = JSON.parse(window.localStorage.getItem(CONSTANTS.ROSTER_DATA_NAME));
 
-    let rosterBlob = JSON.parse(window.localStorage.getItem(CONSTANTS.ROSTER_DATA_NAME));
+
+    let rosterBlob = rosters2021;
     console.log(JSON.stringify(rosterBlob));
     setRosterData(rosterBlob);
   }, []);
@@ -46,9 +90,10 @@ function HomePage() {
       <Flex>
         {
           rosterData && Object.keys(rosterData).map((rosterKey) => {
-            const abc = rosterData[rosterKey];
+            const currentRoster = rosterData[rosterKey];
+            currentRoster.players = sortRosterPlayers(currentRoster.players);
             return (
-              <RosterManager roster={abc} saveRosters={onSaveRosters} isHiddenOn={isHiddenOn} />     
+              <RosterManager roster={currentRoster} saveRosters={onSaveRosters} isHiddenOn={isHiddenOn} />     
             );
           })
         }
