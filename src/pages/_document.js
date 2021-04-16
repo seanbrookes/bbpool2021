@@ -11,6 +11,7 @@ class MyDocument extends Document {
     talkToAmazon();
     return (
       <Html>
+        <title>BB Pool 2021 :: fuck yeah</title>
         <Head />
         <body>
           <Main />
