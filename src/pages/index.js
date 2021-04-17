@@ -60,13 +60,13 @@ function HomePage() {
 
   useEffect(() => {
 
-    if (!window.localStorage.getItem(CONSTANTS.ROSTER_DATA_NAME)) {
-      window.localStorage.setItem(CONSTANTS.ROSTER_DATA_NAME, JSON.stringify(rosters2021));
-    }
-   let rosterBlob = JSON.parse(window.localStorage.getItem(CONSTANTS.ROSTER_DATA_NAME));
+  //   if (!window.localStorage.getItem(CONSTANTS.ROSTER_DATA_NAME)) {
+  //     window.localStorage.setItem(CONSTANTS.ROSTER_DATA_NAME, JSON.stringify(rosters2021));
+  //   }
+  //  let rosterBlob = JSON.parse(window.localStorage.getItem(CONSTANTS.ROSTER_DATA_NAME));
 
 
-   // let rosterBlob = rosters2021;
+    let rosterBlob = rosters2021;
     console.log(JSON.stringify(rosterBlob));
     setRosterData(rosterBlob);
   }, []);
