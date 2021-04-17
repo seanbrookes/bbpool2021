@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { RosterManager } from '../components/RosterManager';
-import { rosters2021 } from '../data/rosters-2021';
 import { CONSTANTS } from '../constants';
+
+import { RosterManager } from '../components/RosterManager';
+import { AddPlayerForm } from '../components/AddPlayerForm';
+import { rosters2021 } from '../data/rosters-2021';
 
 import styled from 'styled-components';
 
@@ -58,13 +60,13 @@ function HomePage() {
 
   useEffect(() => {
 
-  //   if (!window.localStorage.getItem(CONSTANTS.ROSTER_DATA_NAME)) {
-  //     window.localStorage.setItem(CONSTANTS.ROSTER_DATA_NAME, JSON.stringify(rosters2021));
-  //   }
-  //  let rosterBlob = JSON.parse(window.localStorage.getItem(CONSTANTS.ROSTER_DATA_NAME));
+    if (!window.localStorage.getItem(CONSTANTS.ROSTER_DATA_NAME)) {
+      window.localStorage.setItem(CONSTANTS.ROSTER_DATA_NAME, JSON.stringify(rosters2021));
+    }
+   let rosterBlob = JSON.parse(window.localStorage.getItem(CONSTANTS.ROSTER_DATA_NAME));
 
 
-    let rosterBlob = rosters2021;
+   // let rosterBlob = rosters2021;
     console.log(JSON.stringify(rosterBlob));
     setRosterData(rosterBlob);
   }, []);
@@ -81,12 +83,18 @@ function HomePage() {
     //clonedRosterData
     setRosterData(clonedRosterData);
     window.localStorage.setItem(CONSTANTS.ROSTER_DATA_NAME, JSON.stringify(clonedRosterData));
-  }
+  };
+
+  const onSavePlayer = (player) => {
+
+    console.log(`| SAVE player  ${JSON.stringify(player)}  `);
+  };
 
   // let rosters2016 = [];
   return (<div>
       <input style={{position: 'absolute', top: 0, right: 0}} type="checkbox" onChange={onHiddenControlClick} />
       <div>Welcome to Baseball Pool 2021</div>
+      {isHiddenOn && <AddPlayerForm savePlayer={onSavePlayer} />}
       <Flex>
         {
           rosterData && Object.keys(rosterData).map((rosterKey) => {
@@ -98,6 +106,7 @@ function HomePage() {
           })
         }
       </Flex>
+      {isHiddenOn && <textarea rows="12" cols="90" value={JSON.stringify(rosterData)} />}
   </div>);
 }
 

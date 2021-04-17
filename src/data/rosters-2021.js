@@ -233,41 +233,17 @@ export const rosters2021 = {
     "owner": "Russ McPherson",
     "players": [
       {
-        "name": "D Jannsen",
-        "pos": "C",
-        "team": "CHA",
-        "posType": "hitter",
-        "status": "protected",
-        "roster": "rallycaps"
-      },
-      {
-        "name": "S Murphy",
-        "pos": "C",
-        "team": "HOU",
-        "posType": "hitter",
-        "status": "protected",
-        "roster": "rallycaps"
-      },
-      {
-        "name": "G Bird",
-        "pos": "1B",
-        "team": "SEA",
-        "posType": "hitter",
-        "status": "protected",
-        "roster": "rallycaps"
-      },
-      {
-        "name": "R Ohearn",
-        "pos": "1B",
-        "team": "KC",
-        "posType": "hitter",
-        "status": "protected",
-        "roster": "rallycaps"
-      },
-      {
         "name": "M Olson",
         "pos": "1B",
         "team": "OAK",
+        "posType": "hitter",
+        "status": "protected",
+        "roster": "rallycaps"
+      },
+      {
+        "name": "M Sano",
+        "pos": "1B",
+        "team": "MIN",
         "posType": "hitter",
         "status": "protected",
         "roster": "rallycaps"
@@ -281,30 +257,6 @@ export const rosters2021 = {
         "team": "HOU",
         "mlbid": "514888",
         "draftStatus": "protected"
-      },
-      {
-        "name": "Y Moncado",
-        "pos": "2B",
-        "team": "OAK",
-        "posType": "hitter",
-        "status": "protected",
-        "roster": "rallycaps"
-      },
-      {
-        "name": "J Candelario",
-        "pos": "3B",
-        "team": "DET",
-        "posType": "hitter",
-        "status": "protected",
-        "roster": "rallycaps"
-      },
-      {
-        "name": "M Sano",
-        "pos": "3B",
-        "team": "BOS",
-        "posType": "hitter",
-        "status": "protected",
-        "roster": "rallycaps"
       },
       {
         "name": "B Bichette",
@@ -323,37 +275,12 @@ export const rosters2021 = {
         "roster": "rallycaps"
       },
       {
-        "name": "A Modesi",
-        "pos": "SS",
-        "team": "OAK",
-        "posType": "hitter",
-        "status": "protected",
-        "roster": "rallycaps"
-      },
-      {
         "name": "E Rosario",
         "pos": "LF",
         "team": "DET",
         "posType": "hitter",
         "status": "protected",
         "roster": "rallycaps"
-      },
-      {
-        "name": "W Calhoun",
-        "pos": "LF",
-        "team": "LAA",
-        "posType": "hitter",
-        "status": "protected",
-        "roster": "rallycaps"
-      },
-      {
-        "name": "J. Bradley",
-        "pos": "CF",
-        "team": "BOS",
-        "draftStatus": "protected",
-        "mlbid": "598265",
-        "status": "regular",
-        "posType": "hitter"
       },
       {
         "name": "Aaron Judge",
@@ -364,14 +291,6 @@ export const rosters2021 = {
         "posType": "hitter"
       },
       {
-        "name": "T Pham",
-        "pos": "CF",
-        "team": "LAA",
-        "posType": "hitter",
-        "status": "protected",
-        "roster": "rallycaps"
-      },
-      {
         "name": "A Hayes",
         "pos": "RF",
         "team": "BAL",
@@ -380,79 +299,18 @@ export const rosters2021 = {
         "roster": "rallycaps"
       },
       {
-        "name": "N Castallanos",
-        "pos": "RF",
-        "team": "DET",
+        "name": "Y Alverez",
+        "pos": "DH",
+        "team": "HOU",
         "posType": "hitter",
         "status": "protected",
         "roster": "rallycaps"
       },
       {
-        "slug": "rallycaps",
-        "name": "Aaron Sanchez",
-        "pos": "SP",
-        "team": "TOR",
-        "posType": "pitcher",
-        "draftStatus": "protected",
-        "mlbid": "592717",
-        "status": "regular"
-      },
-      {
-        "status": "regular",
-        "posType": "pitcher",
-        "slug": "rallycaps",
-        "name": "Justin Verlander",
-        "pos": "SP",
-        "team": "DET",
-        "mlbid": "434378",
-        "draftStatus": "protected"
-      },
-      {
-        "draftStatus": "protected",
-        "status": "regular",
-        "posType": "pitcher",
-        "name": "Chris Sale",
-        "pos": "SP",
-        "team": "CHA",
-        "mlbid": "519242"
-      },
-      {
-        "name": "B McKay",
-        "pos": "SP",
-        "team": "TB",
-        "posType": "pitcher",
-        "status": "protected",
-        "roster": "rallycaps"
-      },
-      {
-        "name": "B Snell",
-        "pos": "SP",
-        "team": "TB",
-        "posType": "pitcher",
-        "status": "protected",
-        "roster": "rallycaps"
-      },
-      {
-        "name": "L Severino",
-        "pos": "SP",
+        "name": "G Stanton",
+        "pos": "DH",
         "team": "NYY",
-        "posType": "pitcher",
-        "status": "protected",
-        "roster": "rallycaps"
-      },
-      {
-        "name": "J Paxton",
-        "pos": "SP",
-        "team": "NYY",
-        "posType": "pitcher",
-        "status": "protected",
-        "roster": "rallycaps"
-      },
-      {
-        "name": "C Morton",
-        "pos": "SP",
-        "team": "LAA",
-        "posType": "pitcher",
+        "posType": "hitter",
         "status": "protected",
         "roster": "rallycaps"
       },
@@ -460,22 +318,6 @@ export const rosters2021 = {
         "name": "A Colome",
         "pos": "RP",
         "team": "CLE",
-        "posType": "pitcher",
-        "status": "protected",
-        "roster": "rallycaps"
-      },
-      {
-        "name": "C Allen",
-        "pos": "RP",
-        "team": "CLE",
-        "posType": "pitcher",
-        "status": "protected",
-        "roster": "rallycaps"
-      },
-      {
-        "name": "J Alvarado",
-        "pos": "RP",
-        "team": "CHA",
         "posType": "pitcher",
         "status": "protected",
         "roster": "rallycaps"
