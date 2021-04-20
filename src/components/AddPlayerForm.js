@@ -1,4 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+
+const AddPlayerFormLabel = styled.label`
+  width: 60px;
+  display: inline-block;
+
+`;
 
 export const AddPlayerForm = ({savePlayer}) => {
   const [targetNewPlayer, setTargetNewPlayer] = useState(null);
@@ -21,10 +28,9 @@ export const AddPlayerForm = ({savePlayer}) => {
     if (targetPlayer.pos === 'SP' || targetPlayer.pos === 'RP') {
       targetPlayer.posType = 'pitcher';
     }
-    targetPlayer.status = 'protected';
 
 
-    if (targetPlayer.slug && targetPlayer.pos && targetPlayer.team && targetPlayer.name) {
+    if (targetPlayer.roster && targetPlayer.pos && targetPlayer.team && targetPlayer.name) {
       savePlayer(targetPlayer);
       setTargetNewPlayer(null);
   
@@ -46,12 +52,13 @@ export const AddPlayerForm = ({savePlayer}) => {
   return (
     <div>
       <div>
-        <label>
+        <AddPlayerFormLabel>
           Roster:
+          </AddPlayerFormLabel>
           <select
-            onChange={(event) => onUpdateNewPlayerProperty(event, 'slug')}
+            onChange={(event) => onUpdateNewPlayerProperty(event, 'roster')}
             className="select-roster pick-property-edit"
-            value={(targetNewPlayer && targetNewPlayer.slug) ? targetNewPlayer.slug : ''}
+            value={(targetNewPlayer && targetNewPlayer.roster) ? targetNewPlayer.roster : ''}
             data-property="pos"
           >
             <option value>-</option>
@@ -60,20 +67,22 @@ export const AddPlayerForm = ({savePlayer}) => {
             <option value="rallycaps">Rally Caps</option>
             <option value="stallions">Stallions</option>
           </select>
-        </label>
+        
       </div>      
       <div>
-        <label>
+        <AddPlayerFormLabel>
           Name:
+          </AddPlayerFormLabel>
           <input
             value={(targetNewPlayer && targetNewPlayer.name) ? targetNewPlayer.name : ''}
             onChange={(event) => onUpdateNewPlayerProperty(event, 'name')}
           />
-        </label>
+        
       </div>
       <div>
-        <label>
+        <AddPlayerFormLabel>
           Pos:
+          </AddPlayerFormLabel>
           <select
             onChange={(event) => onUpdateNewPlayerProperty(event, 'pos')}
             className="select-pos pick-property-edit"
@@ -93,11 +102,12 @@ export const AddPlayerForm = ({savePlayer}) => {
             <option value="SP">SP</option>
             <option value="RP">RP</option>
           </select>
-        </label>
+
       </div>
       <div>
-        <label>
+        <AddPlayerFormLabel>
           Team:
+          </AddPlayerFormLabel>
           <select
             className="select-team pick-property-edit"
             onChange={(event) => onUpdateNewPlayerProperty(event, 'team')}
@@ -121,26 +131,32 @@ export const AddPlayerForm = ({savePlayer}) => {
             <option value="TEX">TEX</option>
             <option value="TOR">TOR</option>
           </select>
-        </label>
+
       </div>
-      {/* <div>
-        <label>
+      <div>
+        <AddPlayerFormLabel>
           Status:
+          </AddPlayerFormLabel>
           <select
-            value={this.state.newPlayer.status}
-            onChange={this.updateNewPlayerProperty}
-            data-property="draftStatus"
+            value={(targetNewPlayer && targetNewPlayer.status) ? targetNewPlayer.status : 'regular'}
+            onChange={(event) => onUpdateNewPlayerProperty(event, 'status')}
+            data-property="status-input"
           >
-            <option value="drafted">drafted</option>
-            <option value="bubble">bubble</option>
-            <option value="prospect">prospect</option>
-            <option value="protected">protected</option>
-            <option value="roster">roster</option>
             <option value="regular">regular</option>
-            <option value="unprotected">unprotected</option>
+            <option value="prospect">prospect</option>
           </select>
-        </label>
-      </div> */}
+
+      </div>
+      <div>
+        <AddPlayerFormLabel>
+          News:
+          </AddPlayerFormLabel>
+          <input
+            value={(targetNewPlayer && targetNewPlayer.newsLink) ? targetNewPlayer.newsLink : ''}
+            onChange={(event) => onUpdateNewPlayerProperty(event, 'newsLink')}
+          />
+        
+      </div>
       <div className="layout">
         <button
           onClick={onCreatePlayer}

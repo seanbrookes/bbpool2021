@@ -32,7 +32,12 @@ const PlayerGroupTable = styled.table`
 export const RosterManager = ({roster = {}, saveRosters, isHiddenOn}) => {
   const [targetNewPlayer, setTargetNewPlayer] = useState(null);
 
+  
+
   const hitters = roster.players.filter((player) => {
+    if (player.posType === 'pitcher' && player.pos === 'CF') {
+      player.posType = 'hitter';
+    }
     return player.posType === 'hitter';
   });
   const starters = roster.players.filter((player) => {
@@ -75,8 +80,8 @@ export const RosterManager = ({roster = {}, saveRosters, isHiddenOn}) => {
     if (targetPlayer.pos === 'SP' || targetPlayer.pos === 'RP') {
       targetPlayer.posType = 'pitcher';
     }
-    targetPlayer.status = 'protected';
-    targetPlayer.roster = roster.slug;
+    targetPlayer.status = 'regular';
+    targetPlayer.roster = roster.roster;
 
 
     updatedRoster.players.push(targetPlayer);
