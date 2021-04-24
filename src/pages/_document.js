@@ -4,14 +4,9 @@ class MyDocument extends Document {
 
 
   render() { 
-    const talkToAmazon = () => {
-      console.log('|  do it');
-      //arn:aws:s3:us-west-2:011219410918:accesspoint/bbpool2021
-    };
-    talkToAmazon();
     return (
       <Html>
-        <title>BB Pool 2021 :: fuck yeah</title>
+        <title>BB Pool 2021 ::</title>
         <Head />
         <body>
           <Main />

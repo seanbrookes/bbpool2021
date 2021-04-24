@@ -71,26 +71,6 @@ const battersUrl = "https://bdfed.stitch.mlbinfra.com/bdfed/stats/player?stitch_
 const pitchersUrl = "https://bdfed.stitch.mlbinfra.com/bdfed/stats/player?stitch_env=prod&season=2021&stats=season&group=pitching&gameType=R&limit=1000&offset=0&sortStat=earnedRunAverage&order=asc&playerPool=ALL_CURRENT&leagueIds=103";
 
 
-
-export async function getServerSideProps(context) {
-
-  // fetch(battersUrl)
-  // .then((response) => { 
-  //   console.log(`|  response data  ${JSON.stringify(response)}`)
-  //   //return response
-  //   return response.json()
-  // })
-  // .then((data) => { 
-  //   return console.log(`|  response data  ${JSON.stringify(data)}`)
-  // })
-  // .catch((err) => {
-  //   return console.log(`|  ERROR     ${JSON.stringify(err)}`)
-  // });
-
-  return {
-    props: {}, // will be passed to the page component as props
-  }
-}
 function HomePage() {
   const [rosterData, setRosterData] = useState({});
   const [isHiddenOn, setIsHiddenOn] = useState(false);
@@ -112,13 +92,19 @@ function HomePage() {
       })
     });
 
-    const preExistingHitterStats = window.localStorage.getItem(CONSTANTS.RAW_HITTER_STATS)
+    const preExistingHitterStats = window.localStorage.getItem(CONSTANTS.RAW_HITTER_STATS);
     if (preExistingHitterStats) {
       setMlbHitters(JSON.parse(preExistingHitterStats));
+    }
+    else {
+      onLoadPlayerStats();
     }
     const preExistingPitcherStats = window.localStorage.getItem(CONSTANTS.RAW_PITCHER_STATS)
     if (preExistingPitcherStats) {
       setMlbPitchers(JSON.parse(preExistingPitcherStats));
+    }
+    else {
+      onLoadPlayerStats();
     }
 
     // window.localStorage.setItem(CONSTANTS.ROSTER_DATA_NAME, JSON.stringify(rosterBlob));
@@ -216,11 +202,12 @@ export const CONSTANTS = {
           data.stats.map((pitcher) => {
             pitcherStatsObj[pitcher.playerId] = pitcher;
           });
-          setMlbPitchers(pitcherStatsObj);
           const localLatestPitcherStats = {
             timestamp: new Date().getTime(),
             stats: pitcherStatsObj
           };
+          setMlbPitchers(localLatestPitcherStats);
+
           window.localStorage.setItem(CONSTANTS.RAW_PITCHER_STATS, JSON.stringify(localLatestPitcherStats));  
         }
         else {
@@ -241,11 +228,12 @@ export const CONSTANTS = {
           data.stats.map((hitter) => {
             hitterStatsObj[hitter.playerId] = hitter;
           });
-          setMlbHitters(hitterStatsObj);
           const localLatestHitterStats = {
             timestamp: new Date().getTime(),
             stats: hitterStatsObj
           };
+          setMlbHitters(localLatestHitterStats);
+
           window.localStorage.setItem(CONSTANTS.RAW_HITTER_STATS, JSON.stringify(localLatestHitterStats));
   
         }
@@ -363,7 +351,7 @@ export const CONSTANTS = {
   return (<div>
       <input style={{position: 'absolute', top: 0, right: 0}} type="checkbox" onChange={onHiddenControlClick} />
       <div>Welcome to Baseball Pool 2021</div>
-      <button onClick={onLoadPlayerStats}>reload stats</button>
+      {/* <button onClick={onLoadPlayerStats}>reload stats</button> */}
       {/* <PlayerMapper rosterData={rosterData} mlbHitters={mlbHitters} mlbPitchers={mlbPitchers} savePlayer={onSavePlayer} mlbHitters={mlbHitters} mlbPitchers={mlbPitchers} refreshPlayers{onLoadPlayerStats} /> */}
       {isHiddenOn && <AddPlayerForm savePlayer={onSavePlayer} />}
       <Flex>
