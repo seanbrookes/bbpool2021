@@ -9,9 +9,8 @@ const MlbPlayerScrollBox = styled.div`
 `;
 
 
-export const PlayerMapper = ({rosterData, savePlayer}) => {
-  const [mlbHitters, setMlbHitters] = useState([]);
-  const [mlbPitchers, setMlbPitchers] = useState([]);
+export const PlayerMapper = ({rosterData, savePlayer, mlbHitters, mlbPitchers, refreshPlayers}) => {
+
   const [selectedSourcePitcher,setSelectedSourcePitcher] = useState(null);
   const [selectedSourceHitter, setSelectedSourceHitter] = useState(null);
   const [selectedRosterPitcher,setSelectedRosterPitcher] = useState(null);
@@ -54,74 +53,7 @@ export const PlayerMapper = ({rosterData, savePlayer}) => {
     }
   }, [rosterData]);
 
-  const onLoadPlayerStats = async () => {
 
-    // PITCHERS
-    let existingPitcherStats = window.localStorage.getItem('PITCHER_STATS');  // this is a string not an object
-    if (!existingPitcherStats) {
-      getPitcherStats()
-      .then((data) => {
-        console.log('got the pitchers data', data);
-        if (data && data.stats) {
-          data.stats.sort((a, b) => {
-            var x = a.playerName.toLowerCase();
-            var y = b.playerName.toLowerCase();
-            return x < y ? -1 : x > y ? 1 : 0;
-          });
-          setMlbPitchers(data.stats);
-          window.localStorage.setItem('PITCHER_STATS', JSON.stringify(data.stats));  
-        }
-        else {
-          console.warn(`| invalid attempt to set Pitcher data  ${JSON.stringify(data)}`)
-        }
-      });
-    }
-    else {
-      const parsedExistingPitcherStats = JSON.parse(existingPitcherStats);
-      parsedExistingPitcherStats.sort((a, b) => {
-        var x = a.playerName.toLowerCase();
-        var y = b.playerName.toLowerCase();
-        return x < y ? -1 : x > y ? 1 : 0;
-      });
-      setMlbPitchers(parsedExistingPitcherStats);
-    }
-
-
-    // HITTERS
-
-    const existingHitterStats = window.localStorage.getItem('HITTER_STATS');  // this is a string not an object
-    if (!existingHitterStats) {
-      // trigger a fetch
-      getHitterStats()
-      .then((data) => {
-        console.log('got the hitters data', data);
-        if (data && data.stats) {
-          data.stats.sort((a, b) => {
-            var x = a.playerName.toLowerCase();
-            var y = b.playerName.toLowerCase();
-            return x < y ? -1 : x > y ? 1 : 0;
-          });
-          setMlbHitters(data.stats);
-          window.localStorage.setItem('HITTER_STATS', JSON.stringify(data.stats));
-  
-        }
-        else {
-          console.warn(`| invalid attempt to set Hitter data  ${JSON.stringify(data)}`)
-        }
-      });
-    }
-    else {
-      const parsedExistingHitterStats = JSON.parse(existingHitterStats);
-      parsedExistingHitterStats.sort((a, b) => {
-        var x = a.playerName.toLowerCase();
-        var y = b.playerName.toLowerCase();
-        return x < y ? -1 : x > y ? 1 : 0;
-      });
-      setMlbHitters(parsedExistingHitterStats);
-
-    }
-
-  };
 
   const onSaveIdMatch = () => {
     if (selectedSourceHitter && selectedRosterHitter) {
