@@ -168,8 +168,31 @@ const HiiterPosContainer = ({hittersBlob, pos, roster}) => {
             <th>total</th>
           </tr>
       {rosterPosition && rosterPosition.map((player, index) => {
+        let rowStyle = {};
+        if (pos === 'OF') {
+          if (index < 3) {
+            rowStyle['backgroundColor'] = '#efefef';
+            rowStyle['fontWeight'] = 400;
+          }
+          else {
+            rowStyle['fontWeight'] = 300;
+            rowStyle['color'] = '#777777';
+          }
+  
+        }
+        else {
+          if (index === 0) {
+            rowStyle['backgroundColor'] = '#efefef';
+            rowStyle['fontWeight'] = 400;
+          }
+          else {
+            rowStyle['fontWeight'] = 300;
+            rowStyle['color'] = '#777777';
+          }
+  
+        }
         return (
-          <tr>
+          <tr style={rowStyle}>
             <td style={{fontSize: '9px', color: '#444444'}}>{index + 1}</td>
             <td><NameCell>{player.name}</NameCell></td>
             <td><TeamCell>{player.team}</TeamCell></td>
@@ -209,8 +232,17 @@ const StarterPosContainer = ({startersBlob, roster}) => {
             <th>total</th>
           </tr>
       {rosterPosition && rosterPosition.map((player, index) => {
+        let rowStyle = {};
+        if (index < 3) {
+          rowStyle['backgroundColor'] = '#efefef';
+          rowStyle['fontWeight'] = 400;
+        }
+        else {
+          rowStyle['fontWeight'] = 300;
+          rowStyle['color'] = '#777777';
+        }
         return (
-          <tr>
+          <tr style={rowStyle}>
             <td style={{fontSize: '9px', color: '#444444'}}>{index + 1}</td>
             <td><NameCell>{player.name}</NameCell></td>
             <td><TeamCell>{player.team}</TeamCell></td>
@@ -249,8 +281,17 @@ const ClosersPosContainer = ({pitchersBlob, roster}) => {
             <th>total</th>
           </tr>
       {rosterPosition && rosterPosition.map((player, index) => {
+        let rowStyle = {};
+        if (index < 2) {
+          rowStyle['backgroundColor'] = '#efefef';
+          rowStyle['fontWeight'] = 400;
+        }
+        else {
+          rowStyle['fontWeight'] = 300;
+          rowStyle['color'] = '#777777';
+        }
         return (
-          <tr>
+          <tr style={rowStyle}>
             <td style={{fontSize: '9px', color: '#444444'}}>{index + 1}</td>
             <td><NameCell>{player.name}</NameCell></td>
             <td><TeamCell>{player.team}</TeamCell></td>
@@ -411,6 +452,10 @@ export const RosterManager = ({mlbHitters, mlbPitchers, roster = {}, saveRosters
 
     // total it up
     const positionCollection = currentRoster ? currentRoster.players.filter((rosterPlayer) => {
+      if (position === 'OF' && (rosterPlayer.pos === 'LF' || rosterPlayer.pos === 'CF' || rosterPlayer.pos === 'RF' || rosterPlayer.pos === 'OF')) {
+        rosterPlayer.pos = 'OF';
+        return rosterPlayer;
+      }
       return rosterPlayer.pos === position;
     }) : [];
 
