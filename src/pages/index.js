@@ -15,6 +15,47 @@ const Flex = styled.div`
   width: 100%;
   flex-wrap: wrap;
 `;
+const PageTitle = styled.h1`
+  padding: 0;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 200;
+
+`;
+const LastUpdateNotice = styled.div`
+  font-size: 14px;
+  margin: 0 2rem;
+  @media (max-width: 768px) { 
+    margin: 0;
+  }
+`;
+const ForceRefreshButton = styled.button`
+  background: #fdfdfd;
+  border: 1px solid #efefef;
+  color: darkblue;
+  padding: .2rem .5rem;
+  border-radius: .4rem;
+  cursor: pointer;
+  font-size: 12px;
+
+  :hover {
+    color: blue;
+    text-decoration: underline;
+    background: #efefef;
+  }
+  :active {
+    color: #444444;
+    background: #dddddd;
+    text-decoration: none;
+  }
+`;
+
+/* 
+@media (min-width: 768px) { 
+    padding: 1rem 2rem;
+    width: 11rem;
+  }
+*/
 
 export const getPosValue = (pos) => {
 
@@ -347,10 +388,23 @@ export const CONSTANTS = {
 
   };
 
-  // let rosters2016 = [];
-  return (<div>
-      <input style={{position: 'absolute', top: 0, right: 0}} type="checkbox" onChange={onHiddenControlClick} />
-      <div>Welcome to Baseball Pool 2021</div>
+  let lastUpdate = null;
+  if (mlbPitchers && mlbPitchers.timestamp) {
+    var date = new Date(mlbPitchers.timestamp);
+
+//    lastUpdate =`Date: ${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+  
+   // lastUpdate = `stats as of: ${date.toDateString()} ${date.toLocaleTimeString && date.toLocaleTimeString()} ${date.getTimezoneOffset && date.getTimezoneOffset()}`;
+
+    let dateFormatOptions;
+    dateFormatOptions = { dateStyle: 'full', timeStyle: 'long' };
+    lastUpdate = `Stats as of: ${new Intl.DateTimeFormat('en-US', dateFormatOptions).format(date)}`;
+  }
+
+  
+return (<div>
+      {/* <input style={{position: 'absolute', top: 0, right: 0}} type="checkbox" onChange={onHiddenControlClick} /> */}
+      <Flex style={{alignItems: 'center', justifyContent: 'space-between'}}><PageTitle>Baseball Pool 2021</PageTitle>  <LastUpdateNotice>{mlbPitchers && mlbPitchers.timestamp && lastUpdate}</LastUpdateNotice><ForceRefreshButton onClick={onLoadPlayerStats}>refresh stats</ForceRefreshButton></Flex>
       {/* <button onClick={onLoadPlayerStats}>reload stats</button> */}
       {/* <PlayerMapper rosterData={rosterData} mlbHitters={mlbHitters} mlbPitchers={mlbPitchers} savePlayer={onSavePlayer} mlbHitters={mlbHitters} mlbPitchers={mlbPitchers} refreshPlayers{onLoadPlayerStats} /> */}
       {isHiddenOn && <AddPlayerForm savePlayer={onSavePlayer} />}
