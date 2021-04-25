@@ -233,7 +233,7 @@ const StarterPosContainer = ({startersBlob, roster}) => {
           </tr>
       {rosterPosition && rosterPosition.map((player, index) => {
         let rowStyle = {};
-        if (index < 3) {
+        if (index < 4) {
           rowStyle['backgroundColor'] = '#efefef';
           rowStyle['fontWeight'] = 400;
         }
