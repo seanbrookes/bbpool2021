@@ -440,8 +440,8 @@ export const RosterManager = ({mlbHitters, mlbPitchers, roster = {}, saveRosters
         // tally up closers
         tally = 0 ;
         let calculationCollection = [].concat(sortedCollection);
-        if (sortedCollection.length > 3) {
-          calculationCollection = sortedCollection.filter((item, index) => {return index < 3});
+        if (sortedCollection.length > 2) {
+          calculationCollection = sortedCollection.filter((item, index) => {return index < 2});
         }
         calculationCollection.map((player) => {
           tally = tally + player.total;
