@@ -4,9 +4,12 @@ import { CONSTANTS } from '../constants';
 import { RosterManager } from '../components/RosterManager';
 import { AddPlayerForm } from '../components/AddPlayerForm';
 import { PlayerMapper } from '../components/PlayerMapper';
+import { PageHeader } from '../components/PageHeader';
 import { rosters2021 } from '../data/rosters-2021';
+import { Layout } from '../components/Layout';
 
-import { getPitcherStats, getHitterStats } from '../data/fetchStats';
+import { usePoolContext } from '../data/PoolContextProvider';
+
 
 import styled from 'styled-components';
 
@@ -22,33 +25,19 @@ const PageTitle = styled.h1`
   font-weight: 200;
 
 `;
-const LastUpdateNotice = styled.div`
-  font-size: 14px;
-  margin: 0 2rem;
-  @media (max-width: 768px) { 
-    margin: 0;
-  }
-`;
-const ForceRefreshButton = styled.button`
-  background: #fdfdfd;
-  border: 1px solid #efefef;
-  color: darkblue;
-  padding: .2rem .5rem;
-  border-radius: .4rem;
-  cursor: pointer;
-  font-size: 12px;
 
-  :hover {
-    color: blue;
-    text-decoration: underline;
-    background: #efefef;
-  }
-  :active {
-    color: #444444;
-    background: #dddddd;
-    text-decoration: none;
-  }
-`;
+
+const posList = [
+  'C',
+  '1B',
+  '2B',
+  '3B',
+  'SS',
+  'OF',
+  'DH',
+  'SP',
+  'RP'
+];
 
 /* 
 @media (min-width: 768px) { 
@@ -112,11 +101,19 @@ const battersUrl = "https://bdfed.stitch.mlbinfra.com/bdfed/stats/player?stitch_
 const pitchersUrl = "https://bdfed.stitch.mlbinfra.com/bdfed/stats/player?stitch_env=prod&season=2021&stats=season&group=pitching&gameType=R&limit=1000&offset=0&sortStat=earnedRunAverage&order=asc&playerPool=ALL_CURRENT&leagueIds=103";
 
 
+
+
+
+
+
+
 function HomePage() {
   const [rosterData, setRosterData] = useState({});
   const [isHiddenOn, setIsHiddenOn] = useState(false);
-  const [mlbHitters, setMlbHitters] = useState([]);
-  const [mlbPitchers, setMlbPitchers] = useState([]);
+
+  const [rosterTotals, setRosterTotals] = useState([]);
+
+  const { state, dispatch } = usePoolContext();
 
   useEffect(() => {
 
@@ -135,18 +132,16 @@ function HomePage() {
 
     const preExistingHitterStats = window.localStorage.getItem(CONSTANTS.RAW_HITTER_STATS);
     if (preExistingHitterStats) {
-      setMlbHitters(JSON.parse(preExistingHitterStats));
+      dispatch({type: 'setMlbHitters', mlbHitters: JSON.parse(preExistingHitterStats)});
+      //setMlbHitters(JSON.parse(preExistingHitterStats));
     }
-    else {
-      onLoadPlayerStats();
-    }
+
     const preExistingPitcherStats = window.localStorage.getItem(CONSTANTS.RAW_PITCHER_STATS)
     if (preExistingPitcherStats) {
-      setMlbPitchers(JSON.parse(preExistingPitcherStats));
+      dispatch({type: 'setMlbHitters', mlbHitters: JSON.parse(preExistingHitterStats)});
+     // setMlbPitchers(JSON.parse(preExistingPitcherStats));
     }
-    else {
-      onLoadPlayerStats();
-    }
+
 
     // window.localStorage.setItem(CONSTANTS.ROSTER_DATA_NAME, JSON.stringify(rosterBlob));
 
@@ -156,156 +151,369 @@ function HomePage() {
 
 
 
+  useEffect(() => {
 
-  const onLoadPlayerStats = async (event, isForceRefresh) => {
+    const rosterTotals = {};
+    rosterData && Object.keys(rosterData).map((rosterKey) => {
+      const currentRoster = rosterData[rosterKey];
+      rosterTotals[rosterKey] = {
+        'SP': 0,
+        'RP': 0,
+        'OF': 0,
+        'C': 0,
+        '1B': 0,
+        '2B': 0,
+        '3B': 0,
+        'SS': 0,
+        'DH': 0,
+        'hitters': 0,
+        'starters': 0,
+        'relievers': 0,
+        'grandTotal': 0,
+        'roster': rosterKey
+      };
 
-    /*
-      stats blob
-      {
-        timestamp: 234234224,
-        stats: {  // key object structure
-          23423: {
-            playerId: 23423,
-            playerName: 'raul mondesi'
+      posList.map((position) => {
+ 
+        if (currentRoster && currentRoster.players) {
+    
+          // total it up
 
+
+          // clean up outfield positions
+          const positionCollection = currentRoster ? currentRoster.players.filter((rosterPlayer) => {
+            if (position === 'OF' && (rosterPlayer.pos === 'LF' || rosterPlayer.pos === 'CF' || rosterPlayer.pos === 'RF' || rosterPlayer.pos === 'OF')) {
+              rosterPlayer.pos = 'OF';
+              return rosterPlayer;
+            }
+            return rosterPlayer.pos === position;
+          }) : [];
+      
+          // sort the collection
+          const sortedCollection = positionCollection.sort((a, b) => {
+            var x = a.total;
+            var y = b.total;
+            return x > y ? -1 : x < y ? 1 : 0;
+          });
+          let tally = 0;
+      
+          if (sortedCollection.length > 0) {
+
+
+
+
+
+            /*
+            
+            TALLY STARTERS
+            
+            
+            */
+            if (position === 'SP') {
+              // tally up starters
+              tally = 0 ;
+              let calculationCollection = [].concat(sortedCollection);
+              if (calculationCollection.length > 4) {
+                calculationCollection = sortedCollection.filter((item, index) => {return index < 4});
+              }
+              calculationCollection.map((player) => {
+                tally = tally + player.total;
+
+              });
+              rosterTotals[rosterKey]['SP'] = tally;
+              rosterTotals[rosterKey]['starters'] = tally;
+            //  setRosterStartersTotal(tally);
+      
+      
+            }
+
+            /*
+            
+            TALLY CLOSERS
+            
+            
+            */
+            else if (position === 'RP') {
+              // tally up closers
+              tally = 0 ;
+              let calculationCollection = [].concat(sortedCollection);
+              if (sortedCollection.length > 2) {
+                calculationCollection = sortedCollection.filter((item, index) => {return index < 2});
+              }
+              calculationCollection.map((player) => {
+                tally = tally + player.total;
+              });
+              rosterTotals[rosterKey]['RP'] = tally;
+              rosterTotals[rosterKey]['relievers'] = tally;
+          //    setRosterClosersTotal(tally);
+            }
+
+
+          /*
+            
+            TALLY OUTFIELD
+            
+            
+            */
+            else if (position === 'OF') {
+              // tally up outfielders
+              tally = 0 ;
+              let calculationCollection = [].concat(sortedCollection);
+              if (sortedCollection.length > 3) {
+                calculationCollection = sortedCollection.filter((item, index) => {return index < 3});
+              }
+              calculationCollection.map((player) => {
+                tally = tally + player.total;
+              });
+              rosterTotals[rosterKey]['OF'] = tally;
+          //   setRosterOutfieldTotal(tally);
+            }
+
+
+            /*
+            
+            TALLY EACH POSITION
+            
+            
+            */
+            else {
+              // tally up regular hitter
+              tally = 0 ;
+              tally = sortedCollection[0].total;
+      
+              
+              rosterTotals[rosterKey][position] = tally;      
+              switch(position) {
+      
+                case 'C': {
+          //       setRosterCatcherTotal(tally);
+
+                  break;
+                }
+                case '1B': {
+          //        setRoster1BTotal(tally);
+      
+                  break;
+                }
+                case '2B': {
+          //        setRoster2BTotal(tally);
+      
+                  break;
+                }
+                case '3B': {
+          //       setRoster3BTotal(tally);
+      
+                  break;
+                }
+                case 'SS': {
+          //       setRosterSSTotal(tally);
+      
+                  break;
+                }
+                case 'DH': {
+          //       setRosterDHTotal(tally);
+      
+                  break;
+                }
+                default: {
+                  
+                }
+              }
+            }
+        
           }
-        }
-      }
+    
+    
+    
+    
     
 
-export const CONSTANTS = {
-  ROSTER_DATA_NAME: 'ROSTER_DATA',
-  RAW_PITCHER_STATS: 'RAW_PITCHER_STATS',
-  RAW_HITTER_STATS: 'RAW_HITTER_STATS',
-  STALE_STATS_TIME_GAP: 800
-};
-
-
-    */
-
-    let loadFromSource = false;
-    let mlbPitchersBlob = {};
-    let mlbHittersBlob = {};
-    let preExistingPitcherStats = null;
-
-
-    if (isForceRefresh) {
-      loadFromSource = true;
-      
-    }
-    else { // may exist but are expired, or may not be expired, or never loaded
-
-
-
-      preExistingPitcherStats = window.localStorage.getItem(CONSTANTS.RAW_PITCHER_STATS);  // this is a string not an object
-      
-      if (preExistingPitcherStats) {
-        const parsedPitcherStats = JSON.parse(preExistingPitcherStats);
-        const currentTimeStamp = new Date().getTime();
-        // check if timestamp has expired
-        if (parsedPitcherStats && parsedPitcherStats.timestamp) {
-          const timeGap = currentTimeStamp - parsedPitcherStats.timestamp;
-          if (timeGap > CONSTANTS.STALE_STATS_TIME_GAP) {
-            isForceRefresh = true;
-          }
-          else {
-            mlbPitchersBlob = parsedPitcherStats.stats;
-          }
+        // setRosterHittersTotal(runningHitterTotal);   
+    
+    
+    
+    
+    
+    
+    
         }
+    
+    
+       });
+       rosterTotals[rosterKey]['hitters'] =  Number(rosterTotals[rosterKey]['OF']) + 
+        Number(rosterTotals[rosterKey]['C']) + 
+        Number(rosterTotals[rosterKey]['1B']) + 
+        Number(rosterTotals[rosterKey]['2B']) + 
+        Number(rosterTotals[rosterKey]['3B']) + 
+        Number(rosterTotals[rosterKey]['SS']) + 
+        Number(rosterTotals[rosterKey]['DH']);
 
+        if (rosterTotals[rosterKey]['hitters'] && rosterTotals[rosterKey]['starters'] && rosterTotals[rosterKey]['relievers']) {
+
+          const theTotal = rosterTotals[rosterKey]['hitters'] + rosterTotals[rosterKey]['starters'] + rosterTotals[rosterKey]['relievers'];
+    
+          rosterTotals[rosterKey]['grandTotal'] = theTotal;
+      
+        }
+    });
+
+
+    if (rosterTotals['bashers']) {  // pick any one just to make sure we have data
+
+      let grandTotalsHistoryData = window.localStorage.getItem('GRAND_TOTALS_HISTORY');
+
+      let theHistoryData = {};
+  
+      if (!grandTotalsHistoryData) {
+        const timestamp = new Date().getTime();
+        grandTotalsHistoryData = {};
+        rosterTotals.timestamp = timestamp;
+        grandTotalsHistoryData[timestamp] = rosterTotals;
+        theHistoryData = grandTotalsHistoryData;
+        window.localStorage.setItem('GRAND_TOTALS_HISTORY', JSON.stringify(theHistoryData));
       }
       else {
-        isForceRefresh = true;
-      }
+        theHistoryData = JSON.parse(grandTotalsHistoryData);
 
-    }
-
+        let historyCollection = []
+        Object.keys(theHistoryData).map((historyKey) => {
+          const currentDataObject = theHistoryData[historyKey];
+          historyCollection.push(currentDataObject);
+        });
     
 
-
-
-
-
-
-
-    if (isForceRefresh) {
-      // Pitchers
-      getPitcherStats()
-      .then((data) => {
-        console.log('got the pitchers data', data);
-        if (data && data.stats) {
-          data.stats.sort((a, b) => {
-            var x = a.playerName.toLowerCase();
-            var y = b.playerName.toLowerCase();
-            return x < y ? -1 : x > y ? 1 : 0;
+        let isNewHistory = false;
+        if (historyCollection.length > 1) {
+          historyCollection.sort((a, b) => {
+            var x = a.timestamp;
+            var y = b.timestamp;
+            return x > y ? -1 : x < y ? 1 : 0;
           });
-          const pitcherStatsObj = {};
-          data.stats.map((pitcher) => {
-            pitcherStatsObj[pitcher.playerId] = pitcher;
-          });
-          const localLatestPitcherStats = {
-            timestamp: new Date().getTime(),
-            stats: pitcherStatsObj
-          };
-          setMlbPitchers(localLatestPitcherStats);
 
-          window.localStorage.setItem(CONSTANTS.RAW_PITCHER_STATS, JSON.stringify(localLatestPitcherStats));  
+          const currentHistoryObj = rosterTotals;
+          const previousHistoryObj = historyCollection[0];
+
+
+
+          if ((rosterTotals['stallions']['grandTotal'] !== previousHistoryObj['stallions']['grandTotal']) ||
+          (rosterTotals['mashers']['grandTotal'] !== previousHistoryObj['mashers']['grandTotal']) ||
+          (rosterTotals['bashers']['grandTotal'] !== previousHistoryObj['bashers']['grandTotal']) ||
+          (rosterTotals['rallycaps']['grandTotal'] !== previousHistoryObj['rallycaps']['grandTotal'])) {
+            console.log('|  this is new history ');
+             isNewHistory = true;
+          }
+          else {
+            console.log('|  this is not new history ');  
+          }
+
+
         }
         else {
-          console.warn(`| invalid attempt to set Pitcher data  ${JSON.stringify(data)}`)
+          isNewHistory = true;
         }
-      });
-      // Hitters
-      getHitterStats()
-      .then((data) => {
-        console.log('got the hitters data', data);
-        if (data && data.stats) {
-          data.stats.sort((a, b) => {
-            var x = a.playerName.toLowerCase();
-            var y = b.playerName.toLowerCase();
-            return x < y ? -1 : x > y ? 1 : 0;
-          });
-          const hitterStatsObj = {};
-          data.stats.map((hitter) => {
-            hitterStatsObj[hitter.playerId] = hitter;
-          });
-          const localLatestHitterStats = {
-            timestamp: new Date().getTime(),
-            stats: hitterStatsObj
-          };
-          setMlbHitters(localLatestHitterStats);
 
-          window.localStorage.setItem(CONSTANTS.RAW_HITTER_STATS, JSON.stringify(localLatestHitterStats));
+
+
+
+
+
+        if (isNewHistory) {
+          // create a new history object
+          const newTimestamp = new Date().getTime();
+
+          rosterTotals.timestamp = newTimestamp;
+          theHistoryData[newTimestamp] = rosterTotals;
+          dispatch({type: 'setLastUpdateTimestamp', timestamp: newTimestamp});
+
+          window.localStorage.setItem('GRAND_TOTALS_HISTORY', JSON.stringify(theHistoryData));
+        }
+
+    
+    
+    
+        console.log('| grand total blob  ', theHistoryData);
+
+
+
+
+        let deltaMasterHistoryData = window.localStorage.getItem('GRAND_TOTALS_HISTORY');
+        let parsedDeltaMasterHistoryData = JSON.parse(deltaMasterHistoryData);
+
+        let deltaHistoryCollection = [];
+        Object.keys(parsedDeltaMasterHistoryData).map((historyKey) => {
+          const currentDataObject = theHistoryData[historyKey];
+          deltaHistoryCollection.push(currentDataObject);
+        });
+
+        if (deltaHistoryCollection.length > 1) {
+          deltaHistoryCollection.sort((a, b) => {
+            var x = a.timestamp;
+            var y = b.timestamp;
+            return x > y ? -1 : x < y ? 1 : 0;
+          });
+
+          const newer = deltaHistoryCollection[0];
+          const older = deltaHistoryCollection[1];
+
+          dispatch({type: 'setLastUpdateTimestamp', timestamp: newer.timestamp});
+
+          rosterTotals['bashers']['delta'] = (Number(newer['bashers']['grandTotal']) - Number(older['bashers']['grandTotal']));
+          rosterTotals['mashers']['delta'] = (Number(newer['mashers']['grandTotal']) - Number(older['mashers']['grandTotal']));
+          rosterTotals['rallycaps']['delta'] = (Number(newer['rallycaps']['grandTotal']) - Number(older['rallycaps']['grandTotal']));
+          rosterTotals['stallions']['delta'] = (Number(newer['stallions']['grandTotal']) - Number(older['stallions']['grandTotal']));
+
+
+
+
+      }
   
-        }
-        else {
-          console.warn(`| invalid attempt to set Hitter data  ${JSON.stringify(data)}`)
-        }
-      });
+
+  
     }
-    else {
-      // preexisting fresh stats
-      const parsedExistingPitcherStats = JSON.parse(preExistingPitcherStats);
-      parsedExistingPitcherStats.sort((a, b) => {
-        var x = a.playerName.toLowerCase();
-        var y = b.playerName.toLowerCase();
-        return x < y ? -1 : x > y ? 1 : 0;
-      });
-      setMlbPitchers(parsedExistingPitcherStats);
+  }
 
 
-      const preExistingHitterStats = window.localStorage.getItem(CONSTANTS.RAW_PITCHER_STATS);  // this is a string not an object
 
-      const parsedExistingHitterStats = preExistingHitterStats ? JSON.parse(preExistingHitterStats) : [];
-      parsedExistingHitterStats.sort((a, b) => {
-        var x = a.playerName.toLowerCase();
-        var y = b.playerName.toLowerCase();
-        return x < y ? -1 : x > y ? 1 : 0;
-      });
-      setMlbHitters(parsedExistingHitterStats);
-    }
 
-  };
+
+ 
+    dispatch({type: 'setGrandTotals', rosterTotals});
+ 
+    setRosterTotals(rosterTotals);
+ 
+ 
+   }, [rosterData]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -325,6 +533,19 @@ export const CONSTANTS = {
 
   const onHiddenControlClick = (event) => {
     setIsHiddenOn(!isHiddenOn);
+  };
+
+  const onUpdateRosterTotal = (roster, total) => {
+    if (rosterData) {
+      const copyRosterData = {...rosterData};
+
+
+      copyRosterData[roster].total = total;
+      
+      setRosterData(copyRosterData);
+  
+    }
+
   };
 
   // const onUpdateRosterPlayer = (player) => {
@@ -388,39 +609,25 @@ export const CONSTANTS = {
 
   };
 
-  let lastUpdate = null;
-  if (mlbPitchers && mlbPitchers.timestamp) {
-    var date = new Date(mlbPitchers.timestamp);
 
-//    lastUpdate =`Date: ${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-  
-   // lastUpdate = `stats as of: ${date.toDateString()} ${date.toLocaleTimeString && date.toLocaleTimeString()} ${date.getTimezoneOffset && date.getTimezoneOffset()}`;
-
-    let dateFormatOptions;
-    dateFormatOptions = { dateStyle: 'full', timeStyle: 'long' };
-    lastUpdate = `Stats as of: ${new Intl.DateTimeFormat('en-US', dateFormatOptions).format(date)}`;
-  }
 
   
-return (<div>
-      {/* <input style={{position: 'absolute', top: 0, right: 0}} type="checkbox" onChange={onHiddenControlClick} /> */}
-      <Flex style={{alignItems: 'center', justifyContent: 'space-between'}}><PageTitle>Baseball Pool 2021</PageTitle>  <LastUpdateNotice>{mlbPitchers && mlbPitchers.timestamp && lastUpdate}</LastUpdateNotice><ForceRefreshButton onClick={onLoadPlayerStats}>refresh stats</ForceRefreshButton></Flex>
-      {/* <button onClick={onLoadPlayerStats}>reload stats</button> */}
-      {/* <PlayerMapper rosterData={rosterData} mlbHitters={mlbHitters} mlbPitchers={mlbPitchers} savePlayer={onSavePlayer} mlbHitters={mlbHitters} mlbPitchers={mlbPitchers} refreshPlayers{onLoadPlayerStats} /> */}
+return (<Layout>
       {isHiddenOn && <AddPlayerForm savePlayer={onSavePlayer} />}
+
       <Flex>
         {
           rosterData && Object.keys(rosterData).map((rosterKey) => {
             const currentRoster = rosterData[rosterKey];
             currentRoster.players = sortRosterPlayers(currentRoster.players);
             return (
-              <RosterManager mlbPitchers={mlbPitchers.stats} mlbHitters={mlbHitters.stats} roster={currentRoster} saveRosters={onSaveRosters} isHiddenOn={isHiddenOn} />     
+              <RosterManager onUpdateRosterTotal={onUpdateRosterTotal} mlbPitchers={state?.mlbPitchers?.stats} mlbHitters={state?.mlbHitters?.stats} roster={currentRoster} saveRosters={onSaveRosters} isHiddenOn={isHiddenOn} />     
             );
           })
         }
       </Flex>
       {isHiddenOn && <textarea rows="12" cols="90" defaultValue={JSON.stringify(rosterData)} />}
-  </div>);
+  </Layout>);
 }
 
 export default HomePage

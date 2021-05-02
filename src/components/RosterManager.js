@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import Link from 'next/link';
 
 const PlayerGroupTable = styled.table`
 
@@ -142,11 +143,12 @@ const geCloserTotal = (reliever) => {
   return totalVal;
 };
 
-const HiiterPosContainer = ({hittersBlob, pos, roster}) => {
+const HitterPosContainer = ({hittersBlob, pos, roster}) => {
   if (!pos) {
     return null;
   }
-  const allPosition = hittersBlob && hittersBlob[pos];
+  const thePosition = hittersBlob && hittersBlob[pos];
+  const allPosition = thePosition ? Object.keys(thePosition).map((key) => thePosition[key]) : [];
   const rosterPosition = allPosition && allPosition.filter((player) => {
     return player.roster === roster;
   }).sort((a, b) => {
@@ -158,7 +160,7 @@ const HiiterPosContainer = ({hittersBlob, pos, roster}) => {
     <HitterPosTable>
       <tr>
             <th></th>
-            <th><PosLabel>{pos}</PosLabel></th>
+            <th><Link href={`/pos/${pos}`}><a><PosLabel>{pos}</PosLabel></a></Link></th>
             <th></th>
             <th>r</th>
             <th>h</th>
@@ -194,7 +196,7 @@ const HiiterPosContainer = ({hittersBlob, pos, roster}) => {
         return (
           <tr style={rowStyle}>
             <td style={{fontSize: '9px', color: '#444444'}}>{index + 1}</td>
-            <td><NameCell>{player.name}</NameCell></td>
+            <td><NameCell><a target="_new" href={player.newsLink}>{player.name}</a></NameCell></td>
             <td><TeamCell>{player.team}</TeamCell></td>
             <td><RunsCell>{player.runs}</RunsCell></td>
             <td><HitsCell>{player.hits}</HitsCell></td>
@@ -210,7 +212,8 @@ const HiiterPosContainer = ({hittersBlob, pos, roster}) => {
 };
 
 const StarterPosContainer = ({startersBlob, roster}) => {
-  const allPosition = startersBlob && startersBlob['SP'];
+  const thePosition = startersBlob && startersBlob['SP'];
+  const allPosition = thePosition ? Object.keys(thePosition).map((key) => thePosition[key]) : [];
   const rosterPosition = allPosition && allPosition.filter((player) => {
     return player.roster === roster;
   }).sort((a, b) => {
@@ -222,7 +225,7 @@ const StarterPosContainer = ({startersBlob, roster}) => {
     <HitterPosTable>
       <tr>
             <th></th>
-            <th><PosLabel>Starters</PosLabel></th>
+            <th><Link href={`/pos/SP`}><a><PosLabel>Starters</PosLabel></a></Link></th>
             <th></th>
             <th></th>
             <th>w</th>
@@ -244,7 +247,7 @@ const StarterPosContainer = ({startersBlob, roster}) => {
         return (
           <tr style={rowStyle}>
             <td style={{fontSize: '9px', color: '#444444'}}>{index + 1}</td>
-            <td><NameCell>{player.name}</NameCell></td>
+            <td><NameCell><a target="_new" href={player.newsLink}>{player.name}</a></NameCell></td>
             <td><TeamCell>{player.team}</TeamCell></td>
             <td><RunsCell></RunsCell></td>
             <td><HitsCell>{player.wins}</HitsCell></td>
@@ -259,7 +262,8 @@ const StarterPosContainer = ({startersBlob, roster}) => {
   );
 };
 const ClosersPosContainer = ({pitchersBlob, roster}) => {
-  const allPosition = pitchersBlob && pitchersBlob['RP'];
+  const thePosition = pitchersBlob && pitchersBlob['RP'];
+  const allPosition = thePosition ? Object.keys(thePosition).map((key) => thePosition[key]): [];
   const rosterPosition = allPosition && allPosition.filter((player) => {
     return player.roster === roster;
   }).sort((a, b) => {
@@ -271,7 +275,7 @@ const ClosersPosContainer = ({pitchersBlob, roster}) => {
     <HitterPosTable>
       <tr>
             <th></th>
-            <th><PosLabel>Closers</PosLabel></th>
+            <th><Link href={`/pos/RP`}><a><PosLabel>Closers</PosLabel></a></Link></th>
             <th></th>
             <th>sv</th>
             <th>w</th>
@@ -293,7 +297,7 @@ const ClosersPosContainer = ({pitchersBlob, roster}) => {
         return (
           <tr style={rowStyle}>
             <td style={{fontSize: '9px', color: '#444444'}}>{index + 1}</td>
-            <td><NameCell>{player.name}</NameCell></td>
+            <td><NameCell><a target="_new" href={player.newsLink}>{player.name}</a></NameCell></td>
             <td><TeamCell>{player.team}</TeamCell></td>
             <td><RunsCell>{player.saves}</RunsCell></td>
             <td><HitsCell>{player.wins}</HitsCell></td>
@@ -308,7 +312,7 @@ const ClosersPosContainer = ({pitchersBlob, roster}) => {
   );
 };
 
-export const RosterManager = ({mlbHitters, mlbPitchers, roster = {}, saveRosters, isHiddenOn}) => {
+export const RosterManager = ({mlbHitters, mlbPitchers, roster = {}, saveRosters, isHiddenOn, onUpdateRosterTotal}) => {
   const [targetNewPlayer, setTargetNewPlayer] = useState(null);
   const [currentRosterScoreData, setCurrentRosterScoreData] = useState(null);
   const [currentRawScoreData, setCurrentRawScoreData] = useState(null);
@@ -328,8 +332,16 @@ export const RosterManager = ({mlbHitters, mlbPitchers, roster = {}, saveRosters
   useEffect(() => {
 
     if (roster && roster.players) {
-      const rawPosTypeScoreData = {hitters: {}, starters: {}, relievers: {}};
-      const positionScoreData = {};
+      let rawPosTypeScoreData = {hitters: {}, starters: {}, relievers: {}};
+      const preExistingStoredPosData = window.localStorage.getItem('RAW_POS_STATS');
+      if (preExistingStoredPosData) {
+        rawPosTypeScoreData = JSON.parse(preExistingStoredPosData);
+      }
+      let positionScoreData = {};
+      const preExistingRosterStats = window.localStorage.getItem('ROSTER_STATS');
+      if (preExistingRosterStats) {
+        positionScoreData = JSON.parse(preExistingRosterStats);
+      }
       /*
       
       THE BIG LOOP
@@ -347,12 +359,15 @@ export const RosterManager = ({mlbHitters, mlbPitchers, roster = {}, saveRosters
             const currentPlayerStats = {};
             const rawHitterStats = mlbHitters && mlbHitters[player.playerId];
             if (rawHitterStats) {
+              rawHitterStats.roster = roster.slug;
+              rawHitterStats.poolPos = player.pos;
               rawPosTypeScoreData['hitters'][player.playerId] = rawHitterStats;
 
 
               const currentHitter = player && rawPosTypeScoreData && rawPosTypeScoreData['hitters'] && rawPosTypeScoreData['hitters'][player.playerId] && rawPosTypeScoreData['hitters'][player.playerId];
               player.total = currentHitter ? getHitterTotal(currentHitter) : 0;
-              
+              rawPosTypeScoreData['hitters'][player.playerId].total = player.total;
+              rawPosTypeScoreData['hitters'][player.playerId].newsLink = player.newsLink ? player.newsLink : '';
               // convert LF, CF and RF to OF
               let thePos = player.pos;
               if (player.pos === 'LF' || player.pos === 'CF' || player.pos === 'RF') {
@@ -367,10 +382,10 @@ export const RosterManager = ({mlbHitters, mlbPitchers, roster = {}, saveRosters
 
 
               if (!positionScoreData[thePos]) {
-                positionScoreData[thePos] = [];
+                positionScoreData[thePos] = {};
               }
 
-              positionScoreData[thePos].push(mergedHitterData);
+              positionScoreData[thePos][mergedHitterData.playerId] = mergedHitterData;
             }
           }
         }
@@ -383,17 +398,21 @@ export const RosterManager = ({mlbHitters, mlbPitchers, roster = {}, saveRosters
           if (player.playerId) {
             const rawPitcherStats = mlbPitchers && mlbPitchers[player.playerId];
             if (rawPitcherStats) {
+              rawPitcherStats.roster = roster.slug;
+              rawPitcherStats.poolPos = player.pos;
               rawPosTypeScoreData['starters'][player.playerId] = rawPitcherStats;
 
               const currentPitcher = player && rawPosTypeScoreData && rawPosTypeScoreData['starters'] && rawPosTypeScoreData['starters'][player.playerId] && rawPosTypeScoreData['starters'][player.playerId];
               player.total = currentPitcher ? getStarterTotal(currentPitcher) : 0;
+              rawPosTypeScoreData['starters'][player.playerId].total = player.total;
+              rawPosTypeScoreData['starters'][player.playerId].newsLink = player.newsLink ? player.newsLink : '';
 
               const mergedPitcherData = {...player, ...currentPitcher};
               if (!positionScoreData['SP']) {
-                positionScoreData['SP'] = [];
+                positionScoreData['SP'] = {};
               }
 
-              positionScoreData['SP'].push(mergedPitcherData);
+              positionScoreData['SP'][mergedPitcherData.playerId] = mergedPitcherData;
             }
           }
         }
@@ -406,16 +425,20 @@ export const RosterManager = ({mlbHitters, mlbPitchers, roster = {}, saveRosters
           if (player.playerId) {
             const rawRelieverStats = mlbPitchers && mlbPitchers[player.playerId];
             if (rawRelieverStats) {
+              rawRelieverStats.roster = roster.slug;
+              rawRelieverStats.poolPos = player.pos;
               rawPosTypeScoreData['relievers'][player.playerId] = rawRelieverStats;
               const currentCloserPitcher = player && rawPosTypeScoreData && rawPosTypeScoreData['relievers'] && rawPosTypeScoreData['relievers'][player.playerId] && rawPosTypeScoreData['relievers'][player.playerId];
               player.total = currentCloserPitcher ? geCloserTotal(currentCloserPitcher) : 0;
+              rawPosTypeScoreData['relievers'][player.playerId].total = player.total;
+              rawPosTypeScoreData['relievers'][player.playerId].newsLink = player.newsLink ? player.newsLink : '';
 
               const mergedCloserData = {...player, ...currentCloserPitcher};
               if (!positionScoreData['RP']) {
-                positionScoreData['RP'] = [];
+                positionScoreData['RP'] = {};
               }
 
-              positionScoreData['RP'].push(mergedCloserData);
+              positionScoreData['RP'][mergedCloserData.playerId] = mergedCloserData;
             }
           }
         }
@@ -435,14 +458,33 @@ export const RosterManager = ({mlbHitters, mlbPitchers, roster = {}, saveRosters
       setCurrentRawScoreData(rawPosTypeScoreData);
       setCurrentRoster({...roster});
 
-      
+      // const preExistingStoredPosData = window.localStorage.getItem('RAW_POS_STATS');
+      // if (preExistingStoredPosData) {
+      //   const parsedData = JSON.parse(preExistingStoredPosData);
+      //   const mergedData = {...rawPosTypeScoreData, ...parsedData};
+      //   window.localStorage.setItem('RAW_POS_STATS', JSON.stringify(mergedData));
+      // }
+      // else {
+      window.localStorage.setItem('RAW_POS_STATS', JSON.stringify(rawPosTypeScoreData));        
+//      }
 
-      window.localStorage.setItem('RAW_POS_STATS', JSON.stringify(rawPosTypeScoreData));
-      window.localStorage.setItem('ROSTER_STATS', JSON.stringify(positionScoreData));
+
+      // const preExistingRosterStats = window.localStorage.getItem('ROSTER_STATS');
+      // if (preExistingRosterStats) {
+      //   const parsedRosterData = JSON.parse(preExistingRosterStats);
+      //   const mergedRosterData = {...positionScoreData, ...parsedRosterData};
+      //   window.localStorage.setItem('ROSTER_STATS', JSON.stringify(mergedRosterData));
+      // }
+      // else {
+        window.localStorage.setItem('ROSTER_STATS', JSON.stringify(positionScoreData));        
+     // }     
 
     }
   }, [roster, mlbHitters, mlbPitchers]);
   
+  useEffect(() => {
+    onUpdateRosterTotal(roster.slug, grandTotal);
+  }, [grandTotal]);
 
   useEffect(() => {
 
@@ -694,14 +736,18 @@ export const RosterManager = ({mlbHitters, mlbPitchers, roster = {}, saveRosters
 
 
   return (
-    <RosterManagerContainer>
+    <RosterManagerContainer id={roster.slug}>
       <RosterTitle>{roster.slug} [{grandTotal}]</RosterTitle>
       <RosterPosTypeContainer>
         {
           hitterPosList.map((posKey) => {
+            if (!currentRosterScoreData) {
+              return null; 
+            }
             return (
-              <HiiterPosContainer hittersBlob={currentRosterScoreData} pos={posKey} roster={roster.slug} />
+              <HitterPosContainer hittersBlob={currentRosterScoreData} pos={posKey} roster={roster.slug} />
             ); 
+
           })
         }
         <ScoreContainer>
@@ -709,13 +755,13 @@ export const RosterManager = ({mlbHitters, mlbPitchers, roster = {}, saveRosters
         </ScoreContainer>
       </RosterPosTypeContainer>
       <RosterPosTypeContainer>
-        <StarterPosContainer startersBlob={currentRosterScoreData} roster={roster.slug} />
+        {currentRosterScoreData && <StarterPosContainer startersBlob={currentRosterScoreData} roster={roster.slug} />}
         <ScoreContainer>
           <ScoreLabel>Starters:</ScoreLabel><ScoreValue>{parseFloat(rosterStartersTotal).toFixed(2)}</ScoreValue>
         </ScoreContainer>
       </RosterPosTypeContainer>
       <RosterPosTypeContainer>
-        <ClosersPosContainer pitchersBlob={currentRosterScoreData} roster={roster.slug} />
+        {currentRosterScoreData && <ClosersPosContainer pitchersBlob={currentRosterScoreData} roster={roster.slug} />}
         <ScoreContainer>
           <ScoreLabel>Closers:</ScoreLabel><ScoreValue>{parseFloat(rosterClosersTotal).toFixed(2)}</ScoreValue>
         </ScoreContainer>
