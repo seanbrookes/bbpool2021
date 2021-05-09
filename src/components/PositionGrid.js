@@ -22,6 +22,20 @@ const ColSortButton = styled.button`
   }
 `;
 
+const PosTable = styled.table`
+
+`;
+const RegCel = styled.td`
+  padding: .2rem;
+  border: 1px solid #f1f1f1;
+  font-weight: 400;
+`;
+const TotalCell = styled.td`
+  padding: 0 .7rem 0 .7rem;
+  background: #efefef;
+  font-weight: 500;
+`;
+
 export const PositionGrid = ({pos}) => {
   const [allHitters, setAllHitters] = useState([]);
   const [allStarters, setAllStarters] = useState([]);
@@ -87,16 +101,16 @@ export const PositionGrid = ({pos}) => {
     tableRows = allStarters && allStarters.map((starter, index) => {
       return (
         <tr>
-          <td>{index + 1}</td>          
-          <td>{starter.roster}</td>
-          <td><a target="_new" href={starter.newsLink}>{starter.playerName}</a></td>
-          <td>{starter.poolPos}</td>
-          <td>{starter.teamAbbrev}</td>
-          <td style={{textAlign: 'center'}}>{starter.wins}</td>
-          <td style={{textAlign: 'center'}}>{starter.losses}</td>
-          <td style={{textAlign: 'center'}}>{starter.strikeOuts}</td>
-          <td style={{textAlign: 'center'}}>{starter.inningsPitched}</td>
-          <td>{starter.total}</td>
+          <RegCel>{index + 1}</RegCel>          
+          <RegCel>{starter.roster}</RegCel>
+          <RegCel><a target="_new" href={starter.newsLink}>{starter.playerName}</a></RegCel>
+          <RegCel>{starter.poolPos}</RegCel>
+          <RegCel>{starter.teamAbbrev}</RegCel>
+          <RegCel style={{textAlign: 'center'}}>{starter.wins}</RegCel>
+          <RegCel style={{textAlign: 'center'}}>{starter.losses}</RegCel>
+          <RegCel style={{textAlign: 'center'}}>{starter.strikeOuts}</RegCel>
+          <RegCel style={{textAlign: 'center'}}>{starter.inningsPitched}</RegCel>
+          <TotalCell>{starter.total}</TotalCell>
         </tr>
       ); 
     });
@@ -107,17 +121,17 @@ export const PositionGrid = ({pos}) => {
     tableRows = allClosers && allClosers.map((reliever, index) => {
       return (
         <tr>
-        <td>{index + 1}</td>
-        <td>{reliever.roster}</td>
-        <td><a target="_new" href={reliever.newsLink}>{reliever.playerName}</a></td>
-        <td>{reliever.poolPos}</td>
-        <td>{reliever.teamAbbrev}</td>
-        <td style={{textAlign: 'center'}}>{reliever.wins}</td>
-        <td style={{textAlign: 'center'}}>{reliever.losses}</td>
-        <td style={{textAlign: 'center'}}>{reliever.saves}</td>
-        <td style={{textAlign: 'center'}}>{reliever.strikeOuts}</td>
-        <td style={{textAlign: 'center'}}>{reliever.inningsPitched}</td>
-        <td>{reliever.total}</td>
+        <RegCel>{index + 1}</RegCel>
+        <RegCel>{reliever.roster}</RegCel>
+        <RegCel><a target="_new" href={reliever.newsLink}>{reliever.playerName}</a></RegCel>
+        <RegCel>{reliever.poolPos}</RegCel>
+        <RegCel>{reliever.teamAbbrev}</RegCel>
+        <RegCel style={{textAlign: 'center'}}>{reliever.wins}</RegCel>
+        <RegCel style={{textAlign: 'center'}}>{reliever.losses}</RegCel>
+        <RegCel style={{textAlign: 'center'}}>{reliever.saves}</RegCel>
+        <RegCel style={{textAlign: 'center'}}>{reliever.strikeOuts}</RegCel>
+        <RegCel style={{textAlign: 'center'}}>{reliever.inningsPitched}</RegCel>
+        <TotalCell>{reliever.total}</TotalCell>
       </tr>
       ); 
     });  
@@ -126,17 +140,17 @@ export const PositionGrid = ({pos}) => {
     tableRows = allHitters && allHitters.map((hitter, index) => {
       return (
         <tr>
-          <td>{index + 1}</td>
-          <td>{hitter.roster}</td>
-          <td><a target="_new" href={hitter.newsLink}>{hitter.playerName}</a></td>
-          <td>{hitter.poolPos}</td>
-          <td>{hitter.teamAbbrev}</td>
-          <td style={{textAlign: 'center'}}>{hitter.runs}</td>
-          <td style={{textAlign: 'center'}}>{hitter.hits}</td>
-          <td style={{textAlign: 'center'}}>{hitter.homeRuns}</td>
-          <td style={{textAlign: 'center'}}>{hitter.stolenBases}</td>
-          <td style={{textAlign: 'center'}}>{hitter.rbi}</td>
-          <td>{hitter.total}</td>
+          <RegCel>{index + 1}</RegCel>
+          <RegCel>{hitter.roster}</RegCel>
+          <RegCel><a target="_new" href={hitter.newsLink}>{hitter.playerName}</a></RegCel>
+          <RegCel>{hitter.poolPos}</RegCel>
+          <RegCel>{hitter.teamAbbrev}</RegCel>
+          <RegCel style={{textAlign: 'center'}}>{hitter.runs}</RegCel>
+          <RegCel style={{textAlign: 'center'}}>{hitter.hits}</RegCel>
+          <RegCel style={{textAlign: 'center'}}>{hitter.homeRuns}</RegCel>
+          <RegCel style={{textAlign: 'center'}}>{hitter.stolenBases}</RegCel>
+          <RegCel style={{textAlign: 'center'}}>{hitter.rbi}</RegCel>
+          <TotalCell>{hitter.total}</TotalCell>
         </tr>
       );  
     });
@@ -146,34 +160,34 @@ export const PositionGrid = ({pos}) => {
       if (pos === 'OF' && (hitter.poolPos === 'LF' || hitter.poolPos === 'RF' || hitter.poolPos === 'CF' || hitter.poolPos == 'OF')) {
         return (
           <tr>
-            <td>{index + 1}</td>
-            <td>{hitter.roster}</td>
-            <td><a target="_new" href={hitter.newsLink}>{hitter.playerName}</a></td>
-            <td>{hitter.poolPos}</td>
-            <td>{hitter.teamAbbrev}</td>
-            <td style={{textAlign: 'center'}}>{hitter.runs}</td>
-            <td style={{textAlign: 'center'}}>{hitter.hits}</td>
-            <td style={{textAlign: 'center'}}>{hitter.homeRuns}</td>
-            <td style={{textAlign: 'center'}}>{hitter.stolenBases}</td>
-            <td style={{textAlign: 'center'}}>{hitter.rbi}</td>
-            <td>{hitter.total}</td>
+            <RegCel>{index + 1}</RegCel>
+            <RegCel>{hitter.roster}</RegCel>
+            <RegCel><a target="_new" href={hitter.newsLink}>{hitter.playerName}</a></RegCel>
+            <RegCel>{hitter.poolPos}</RegCel>
+            <RegCel>{hitter.teamAbbrev}</RegCel>
+            <RegCel style={{textAlign: 'center'}}>{hitter.runs}</RegCel>
+            <RegCel style={{textAlign: 'center'}}>{hitter.hits}</RegCel>
+            <RegCel style={{textAlign: 'center'}}>{hitter.homeRuns}</RegCel>
+            <RegCel style={{textAlign: 'center'}}>{hitter.stolenBases}</RegCel>
+            <RegCel style={{textAlign: 'center'}}>{hitter.rbi}</RegCel>
+            <TotalCell>{hitter.total}</TotalCell>
           </tr>
         );       
       }
       else if (pos === hitter.poolPos) {
         return (
           <tr>
-            <td>{index + 1}</td>
-            <td>{hitter.roster}</td>
-            <td><a target="_new" href={hitter.newsLink}>{hitter.playerName}</a></td>
-            <td>{hitter.poolPos}</td>
-            <td>{hitter.teamAbbrev}</td>
-            <td style={{textAlign: 'center'}}>{hitter.runs}</td>
-            <td style={{textAlign: 'center'}}>{hitter.hits}</td>
-            <td style={{textAlign: 'center'}}>{hitter.homeRuns}</td>
-            <td style={{textAlign: 'center'}}>{hitter.stolenBases}</td>
-            <td style={{textAlign: 'center'}}>{hitter.rbi}</td>
-            <td>{hitter.total}</td>
+            <RegCel>{index + 1}</RegCel>
+            <RegCel>{hitter.roster}</RegCel>
+            <RegCel><a target="_new" href={hitter.newsLink}>{hitter.playerName}</a></RegCel>
+            <RegCel>{hitter.poolPos}</RegCel>
+            <RegCel>{hitter.teamAbbrev}</RegCel>
+            <RegCel style={{textAlign: 'center'}}>{hitter.runs}</RegCel>
+            <RegCel style={{textAlign: 'center'}}>{hitter.hits}</RegCel>
+            <RegCel style={{textAlign: 'center'}}>{hitter.homeRuns}</RegCel>
+            <RegCel style={{textAlign: 'center'}}>{hitter.stolenBases}</RegCel>
+            <RegCel style={{textAlign: 'center'}}>{hitter.rbi}</RegCel>
+            <TotalCell>{hitter.total}</TotalCell>
           </tr>
         ); 
       } 
@@ -261,11 +275,11 @@ export const PositionGrid = ({pos}) => {
 
     <div >
 
-      <table>
+      <PosTable>
         <caption>position {pos}</caption>
         {tableHeader}
         {tableRows}
-      </table>
+      </PosTable>
     </div>
   );
 }
