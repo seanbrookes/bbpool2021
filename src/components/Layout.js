@@ -86,7 +86,7 @@ export const TotalRankNav = ({rosterTotals}) => {
           <RosterNavTotal>{parseFloat(roster.grandTotal).toFixed(2)} </RosterNavTotal>
           </td>
           <td>
-          <RosterNavDelta>({parseFloat(roster.delta).toFixed(2)})</RosterNavDelta>
+          <RosterNavDelta style={{display: 'none'}}>({parseFloat(roster.delta).toFixed(2)})</RosterNavDelta>
           </td>
         </RosterNavListItem>
       );

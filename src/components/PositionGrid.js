@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { PageHeader } from '../components/PageHeader';
+import { CONSTANTS } from '../constants';
 
 const Flex = styled.div`
   display: flex;
@@ -30,7 +31,13 @@ export const PositionGrid = ({pos}) => {
 
   useEffect(() => {
     if (pos) {
-      const rawPosStats = window.localStorage.getItem('RAW_POS_STATS');
+      let rawPosStats;
+      try {
+        rawPosStats = window.localStorage.getItem(CONSTANTS.RAW_POS_STATS);
+      }
+       catch(error) {
+         console.error('|  can not fetch RAW_POS_STATS', JSON.stringify(error) );
+       }
       if (rawPosStats) {
         const parstedRawPosStats = JSON.parse(rawPosStats);
         const thisHitters = Object.keys(parstedRawPosStats.hitters).map((hitterKey) => parstedRawPosStats.hitters[hitterKey]);

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { rosters2021 } from './rosters-2021';
 
 const PoolContext = React.createContext();
 
@@ -31,6 +32,15 @@ const poolReducer = (state, action) => {
   }
 };
 
+let rosterBlob = rosters2021;
+Object.keys(rosterBlob).map((rosterKey) => {
+  rosterBlob[rosterKey].players.map((player) => {
+    if (!player.roster) {
+      player.roster = rosterKey;
+    }
+  })
+});
+
 const defaultGrandTotals = {
   timestamp: 0,
   bashers: {
@@ -52,7 +62,7 @@ const defaultGrandTotals = {
 };
 
 const PoolContextProvider = ({children}) => {
-  const [state, dispatch] = React.useReducer(poolReducer, {grandTotals: defaultGrandTotals, lastUpdateTimestamp: 0})
+  const [state, dispatch] = React.useReducer(poolReducer, {rosterData: rosterBlob, grandTotals: defaultGrandTotals, lastUpdateTimestamp: 0})
   // NOTE: you *might* need to memoize this value
   // Learn more in http://kcd.im/optimize-context
   const value = {state, dispatch}

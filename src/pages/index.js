@@ -130,13 +130,26 @@ function HomePage() {
       })
     });
 
-    const preExistingHitterStats = window.localStorage.getItem(CONSTANTS.RAW_HITTER_STATS);
+
+    let preExistingHitterStats;
+    try {
+      preExistingHitterStats = window.localStorage.getItem(CONSTANTS.RAW_HITTER_STATS);
+    }
+     catch(error) {
+       console.error('|  can not fetch RAW_HITTER_STATS', JSON.stringify(error) );
+     }
     if (preExistingHitterStats) {
       dispatch({type: 'setMlbHitters', mlbHitters: JSON.parse(preExistingHitterStats)});
       //setMlbHitters(JSON.parse(preExistingHitterStats));
     }
 
-    const preExistingPitcherStats = window.localStorage.getItem(CONSTANTS.RAW_PITCHER_STATS)
+    let preExistingPitcherStats;
+    try {
+      preExistingPitcherStats = window.localStorage.getItem(CONSTANTS.RAW_PITCHER_STATS);
+    }
+     catch(error) {
+       console.error('|  can not fetch RAW_PITCHER_STATS', JSON.stringify(error) );
+     }
     if (preExistingPitcherStats) {
       dispatch({type: 'setMlbHitters', mlbHitters: JSON.parse(preExistingHitterStats)});
      // setMlbPitchers(JSON.parse(preExistingPitcherStats));
@@ -360,8 +373,13 @@ function HomePage() {
 
     if (rosterTotals['bashers']) {  // pick any one just to make sure we have data
 
-      let grandTotalsHistoryData = window.localStorage.getItem('GRAND_TOTALS_HISTORY');
-
+      let grandTotalsHistoryData;
+      try {
+        grandTotalsHistoryData = window.localStorage.getItem(CONSTANTS.GRAND_TOTALS_HISTORY);
+      }
+       catch(error) {
+         console.error('|  can not fetch GRAND_TOTALS_HISTORY', JSON.stringify(error) );
+       }
       let theHistoryData = {};
   
       if (!grandTotalsHistoryData) {
@@ -370,7 +388,13 @@ function HomePage() {
         rosterTotals.timestamp = timestamp;
         grandTotalsHistoryData[timestamp] = rosterTotals;
         theHistoryData = grandTotalsHistoryData;
-        window.localStorage.setItem('GRAND_TOTALS_HISTORY', JSON.stringify(theHistoryData));
+
+        try {
+          window.localStorage.setItem(CONSTANTS.GRAND_TOTALS_HISTORY, JSON.stringify(theHistoryData));
+        }
+         catch(error) {
+           console.error('|  can not write GRAND_TOTALS_HISTORY', JSON.stringify(error) );
+         }
       }
       else {
         theHistoryData = JSON.parse(grandTotalsHistoryData);
@@ -425,7 +449,13 @@ function HomePage() {
           theHistoryData[newTimestamp] = rosterTotals;
           dispatch({type: 'setLastUpdateTimestamp', timestamp: newTimestamp});
 
-          window.localStorage.setItem('GRAND_TOTALS_HISTORY', JSON.stringify(theHistoryData));
+          
+          try {
+            window.localStorage.setItem(CONSTANTS.GRAND_TOTALS_HISTORY, JSON.stringify(theHistoryData));
+          }
+           catch(error) {
+             console.error('|  can not write GRAND_TOTALS_HISTORY', JSON.stringify(error) );
+           }
         }
 
     
@@ -436,8 +466,14 @@ function HomePage() {
 
 
 
-        let deltaMasterHistoryData = window.localStorage.getItem('GRAND_TOTALS_HISTORY');
-        let parsedDeltaMasterHistoryData = JSON.parse(deltaMasterHistoryData);
+        let deltaMasterHistoryData;
+        try {
+          deltaMasterHistoryData = window.localStorage.getItem(CONSTANTS.GRAND_TOTALS_HISTORY);
+        }
+         catch(error) {
+           console.error('|  can not fetch GRAND_TOTALS_HISTORY', JSON.stringify(error) );
+         }
+        let parsedDeltaMasterHistoryData = deltaMasterHistoryData && JSON.parse(deltaMasterHistoryData);
 
         let deltaHistoryCollection = [];
         Object.keys(parsedDeltaMasterHistoryData).map((historyKey) => {
@@ -567,7 +603,13 @@ function HomePage() {
     }
     //clonedRosterData
     setRosterData(clonedRosterData);
-    window.localStorage.setItem(CONSTANTS.ROSTER_DATA_NAME, JSON.stringify(clonedRosterData));
+    
+    try {
+      window.localStorage.setItem(CONSTANTS.ROSTER_DATA_NAME, JSON.stringify(clonedRosterData));
+    }
+     catch(error) {
+       console.error('|  can not write ROSTER_DATA_NAME', JSON.stringify(error) );
+     }
   };
 
   const onSavePlayer = (player) => {
@@ -587,8 +629,13 @@ function HomePage() {
         targetRoster.players.push(player);
         clonedRosterData[player.roster] = targetRoster;
         setRosterData(clonedRosterData);
-        window.localStorage.setItem(CONSTANTS.ROSTER_DATA_NAME, JSON.stringify(clonedRosterData));  
-  
+         
+        try {
+          window.localStorage.setItem(CONSTANTS.ROSTER_DATA_NAME, JSON.stringify(clonedRosterData)); 
+        }
+         catch(error) {
+           console.error('|  can not write ROSTER_DATA_NAME', JSON.stringify(error) );
+         }
       }
       else {
         clonedRosterData[player.roster].players.map((rosterPlayer) => {
@@ -597,8 +644,13 @@ function HomePage() {
           }  
         });
         setRosterData(clonedRosterData);
-        window.localStorage.setItem(CONSTANTS.ROSTER_DATA_NAME, JSON.stringify(clonedRosterData));  
-
+         
+        try {
+          window.localStorage.setItem(CONSTANTS.ROSTER_DATA_NAME, JSON.stringify(clonedRosterData)); 
+        }
+         catch(error) {
+           console.error('|  can not write ROSTER_DATA_NAME', JSON.stringify(error) );
+         }
       }
 
 

@@ -96,6 +96,17 @@ export const CONSTANTS = {
     let mlbPitchersBlob = {};
     let mlbHittersBlob = {};
     let preExistingPitcherStats = null;
+    const playerKeyBlob = {};
+
+    if (state.rosterData) {
+      Object.keys(state.rosterData).map((rosterKey) => {
+        state.rosterData[rosterKey].players.map((player) => {
+          if (player.playerId) {
+            playerKeyBlob[player.playerId] = player.name;
+          }
+        })
+      });
+    }
 
 
     if (isForceRefresh) {
@@ -150,7 +161,11 @@ export const CONSTANTS = {
           });
           const pitcherStatsObj = {};
           data.stats.map((pitcher) => {
-            pitcherStatsObj[pitcher.playerId] = pitcher;
+
+            if (playerKeyBlob[pitcher.playerId]) {
+              pitcherStatsObj[pitcher.playerId] = pitcher;
+            }
+
           });
           const localLatestPitcherStats = {
             timestamp: new Date().getTime(),
@@ -159,7 +174,12 @@ export const CONSTANTS = {
           dispatch({type: 'setMlbPitchers', mlbPitchers: localLatestPitcherStats});
          // setMlbPitchers(localLatestPitcherStats);
 
+         try {
           window.localStorage.setItem(CONSTANTS.RAW_PITCHER_STATS, JSON.stringify(localLatestPitcherStats));  
+         }
+         catch(error) {
+           console.error('|  can not write RAW_PITCHER_STATS', JSON.stringify(error) );
+         }
         }
         else {
           console.warn(`| invalid attempt to set Pitcher data  ${JSON.stringify(data)}`)
@@ -177,7 +197,10 @@ export const CONSTANTS = {
           });
           const hitterStatsObj = {};
           data.stats.map((hitter) => {
-            hitterStatsObj[hitter.playerId] = hitter;
+            
+            if (playerKeyBlob[hitter.playerId]) {
+              hitterStatsObj[hitter.playerId] = hitter;
+            }
           });
           const localLatestHitterStats = {
             timestamp: new Date().getTime(),
@@ -186,8 +209,12 @@ export const CONSTANTS = {
           dispatch({type: 'setMlbHitters', mlbHitters: localLatestHitterStats});
       //    setMlbHitters(localLatestHitterStats);
 
-          window.localStorage.setItem(CONSTANTS.RAW_HITTER_STATS, JSON.stringify(localLatestHitterStats));
-  
+          try {
+            window.localStorage.setItem(CONSTANTS.RAW_HITTER_STATS, JSON.stringify(localLatestHitterStats));
+          }
+           catch(error) {
+             console.error('|  can not write RAW_HITTER_STATS', JSON.stringify(error) );
+           }  
         }
         else {
           console.warn(`| invalid attempt to set Hitter data  ${JSON.stringify(data)}`)
@@ -206,8 +233,13 @@ export const CONSTANTS = {
  //     setMlbPitchers(parsedExistingPitcherStats);
 
 
-      const preExistingHitterStats = window.localStorage.getItem(CONSTANTS.RAW_PITCHER_STATS);  // this is a string not an object
-
+      let preExistingHitterStats;
+      try {
+        preExistingHitterStats = window.localStorage.getItem(CONSTANTS.RAW_PITCHER_STATS);  // this is a string not an object
+      }
+       catch(error) {
+         console.error('|  can not fetch RAW_PITCHER_STATS', JSON.stringify(error) );
+       }  
       const parsedExistingHitterStats = preExistingHitterStats ? JSON.parse(preExistingHitterStats) : [];
       // parsedExistingHitterStats.sort((a, b) => {
       //   var x = a.playerName.toLowerCase();

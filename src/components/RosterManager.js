@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
+import { CONSTANTS } from '../constants';
 
 const PlayerGroupTable = styled.table`
 
@@ -333,12 +334,26 @@ export const RosterManager = ({mlbHitters, mlbPitchers, roster = {}, saveRosters
 
     if (roster && roster.players) {
       let rawPosTypeScoreData = {hitters: {}, starters: {}, relievers: {}};
-      const preExistingStoredPosData = window.localStorage.getItem('RAW_POS_STATS');
+
+      let preExistingStoredPosData;
+      try {
+        preExistingStoredPosData = window.localStorage.getItem(CONSTANTS.RAW_POS_STATS);
+      }
+       catch(error) {
+         console.error('|  can not fetch RAW_POS_STATS', JSON.stringify(error) );
+       }
       if (preExistingStoredPosData) {
         rawPosTypeScoreData = JSON.parse(preExistingStoredPosData);
       }
       let positionScoreData = {};
-      const preExistingRosterStats = window.localStorage.getItem('ROSTER_STATS');
+
+      let preExistingRosterStats;
+      try {
+        preExistingRosterStats = window.localStorage.getItem(CONSTANTS.ROSTER_STATS);
+      }
+       catch(error) {
+         console.error('|  can not fetch ROSTER_STATS', JSON.stringify(error) );
+       }
       if (preExistingRosterStats) {
         positionScoreData = JSON.parse(preExistingRosterStats);
       }
@@ -465,7 +480,13 @@ export const RosterManager = ({mlbHitters, mlbPitchers, roster = {}, saveRosters
       //   window.localStorage.setItem('RAW_POS_STATS', JSON.stringify(mergedData));
       // }
       // else {
-      window.localStorage.setItem('RAW_POS_STATS', JSON.stringify(rawPosTypeScoreData));        
+      
+      try {
+        window.localStorage.setItem(CONSTANTS.RAW_POS_STATS, JSON.stringify(rawPosTypeScoreData)); 
+      }
+       catch(error) {
+         console.error('|  can not write RAW_POS_STATS', JSON.stringify(error) );
+       }       
 //      }
 
 
@@ -476,7 +497,13 @@ export const RosterManager = ({mlbHitters, mlbPitchers, roster = {}, saveRosters
       //   window.localStorage.setItem('ROSTER_STATS', JSON.stringify(mergedRosterData));
       // }
       // else {
-        window.localStorage.setItem('ROSTER_STATS', JSON.stringify(positionScoreData));        
+             
+        try {
+          window.localStorage.setItem(CONSTANTS.ROSTER_STATS, JSON.stringify(positionScoreData));  
+        }
+         catch(error) {
+           console.error('|  can not write ROSTER_STATS', JSON.stringify(error) );
+         }  
      // }     
 
     }
