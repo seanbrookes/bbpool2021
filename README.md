@@ -1,7 +1,7 @@
 # bbpool2021
-My annual baseball pool site.
+Annual friends baseball pool site.
 
-I hosts 4 teams with protected rosters between seasons and then facilitates a draft before the season to fill out unprotected positions in each roster.
+It hosts 4 teams with protected rosters between seasons and then facilitates a draft before the season to fill out unprotected positions in each roster.
 
 Players are mapped to player id properties from the mlb stats db.
 
@@ -35,3 +35,6 @@ hiiter total calc:
 
 
 ```
+
+
+special note of appreciation for mlb to be ok with small fish to access their stats api.
