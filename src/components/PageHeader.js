@@ -162,9 +162,9 @@ export const CONSTANTS = {
           const pitcherStatsObj = {};
           data.stats.map((pitcher) => {
 
-            if (playerKeyBlob[pitcher.playerId]) {
+          //  if (playerKeyBlob[pitcher.playerId]) {
               pitcherStatsObj[pitcher.playerId] = pitcher;
-            }
+          //  }
 
           });
           const localLatestPitcherStats = {
@@ -198,9 +198,9 @@ export const CONSTANTS = {
           const hitterStatsObj = {};
           data.stats.map((hitter) => {
             
-            if (playerKeyBlob[hitter.playerId]) {
+         //   if (playerKeyBlob[hitter.playerId]) {
               hitterStatsObj[hitter.playerId] = hitter;
-            }
+          //  }
           });
           const localLatestHitterStats = {
             timestamp: new Date().getTime(),
@@ -235,7 +235,7 @@ export const CONSTANTS = {
 
       let preExistingHitterStats;
       try {
-        preExistingHitterStats = window.localStorage.getItem(CONSTANTS.RAW_PITCHER_STATS);  // this is a string not an object
+        preExistingHitterStats = window.localStorage.getItem(CONSTANTS.RAW_HITTER_STATS);  // this is a string not an object
       }
        catch(error) {
          console.error('|  can not fetch RAW_PITCHER_STATS', JSON.stringify(error) );

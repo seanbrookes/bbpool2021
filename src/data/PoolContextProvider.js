@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { rosters2021 } from './rosters-2021';
+import rosters2021 from '../data/rosters2021.json';
 
 const PoolContext = React.createContext();
 
