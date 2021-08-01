@@ -5,8 +5,10 @@ import { RosterManager } from '../components/RosterManager';
 import { AddPlayerForm } from '../components/AddPlayerForm';
 import { PlayerMapper } from '../components/PlayerMapper';
 import { PageHeader } from '../components/PageHeader';
-import { rosters2021 } from '../data/rosters-2021';
 import { Layout } from '../components/Layout';
+
+import rosters2021 from '../data/rosters2021.json';
+import { saveRosters } from '../data/saveRosters';
 
 import { usePoolContext } from '../data/PoolContextProvider';
 
@@ -114,6 +116,10 @@ function HomePage() {
   const [rosterTotals, setRosterTotals] = useState([]);
 
   const { state, dispatch } = usePoolContext();
+
+  useEffect(() => {
+   // saveRosters(rosterData);
+  }, [rosterData])
 
   useEffect(() => {
 
@@ -629,7 +635,7 @@ function HomePage() {
         targetRoster.players.push(player);
         clonedRosterData[player.roster] = targetRoster;
         setRosterData(clonedRosterData);
-         
+
         try {
           window.localStorage.setItem(CONSTANTS.ROSTER_DATA_NAME, JSON.stringify(clonedRosterData)); 
         }
@@ -652,6 +658,7 @@ function HomePage() {
            console.error('|  can not write ROSTER_DATA_NAME', JSON.stringify(error) );
          }
       }
+      saveRosters(clonedRosterData);    
 
 
     }
@@ -665,6 +672,8 @@ function HomePage() {
 
   
 return (<Layout>
+  
+    {isHiddenOn && <PlayerMapper rosterData={rosterData} savePlayer={onSavePlayer} mlbHitters={state?.mlbHitters?.stats} mlpPitchers={state?.mlpPitchers?.stats} />}
       {isHiddenOn && <AddPlayerForm savePlayer={onSavePlayer} />}
 
       <Flex>

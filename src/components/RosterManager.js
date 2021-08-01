@@ -1012,7 +1012,7 @@ export const RosterManager = ({mlbHitters, mlbPitchers, roster = {}, saveRosters
       </PlayerGroupTable>
       {/* Player form */}
       <div>
-      {isHiddenOn && <div>
+      {isHiddenOn && <div style={{display: 'none'}}>
           <div>
             <label>
               Name:
