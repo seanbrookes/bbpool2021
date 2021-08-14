@@ -767,12 +767,12 @@ export const RosterManager = ({mlbHitters, mlbPitchers, roster = {}, saveRosters
       <RosterTitle>{roster.slug} [{grandTotal}]</RosterTitle>
       <RosterPosTypeContainer>
         {
-          hitterPosList.map((posKey) => {
+          hitterPosList.map((posKey, index) => {
             if (!currentRosterScoreData) {
               return null; 
             }
             return (
-              <HitterPosContainer hittersBlob={currentRosterScoreData} pos={posKey} roster={roster.slug} />
+              <HitterPosContainer key={index} hittersBlob={currentRosterScoreData} pos={posKey} roster={roster.slug} />
             ); 
 
           })

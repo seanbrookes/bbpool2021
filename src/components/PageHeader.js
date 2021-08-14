@@ -271,7 +271,7 @@ export const CONSTANTS = {
       <Flex style={{alignItems: 'center', justifyContent: 'space-between'}}>
         <PoolTitle><Link href="/"><a>Baseball Pool 2021</a></Link></PoolTitle>
         <LastUpdateNotice>{state && state.timestamp && lastUpdate}</LastUpdateNotice>
-        <ForceRefreshButton onClick={onLoadPlayerStats}>refresh stats</ForceRefreshButton>
+        <ForceRefreshButton onClick={(event) => onLoadPlayerStats(event, true)}>refresh stats</ForceRefreshButton>
         </Flex>
     </header>
   );

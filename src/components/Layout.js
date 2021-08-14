@@ -128,9 +128,9 @@ export const Layout = ({children}) => {
 
           <div style={{marginTop: '1rem'}}>
             <PosListContainer>
-            {posList.map((pos) => {
+            {posList.map((pos, index) => {
               return (
-                <li>
+                <li key={index}>
                   <Link href={`/pos/${pos === 'All hitters' ? 'hitters' : pos}`}><a>{pos}</a></Link>
                   
                 </li>
